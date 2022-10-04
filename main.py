@@ -7,8 +7,8 @@ def run():
     settings = Settings()
     
     screen=pygame.display.set_mode((settings.screen_width, settings.screen_height), vsync= 1)
-    pygame.display.set_caption("Pirate invasion")
+    pygame.display.set_caption("PythonMind")
     while True:
-        pass
+        gf.update_screen(settings, screen)
 
 run()
