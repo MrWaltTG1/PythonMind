@@ -3,7 +3,7 @@ import pygame
 
 class Button():
     
-    def __init__(self, screen, settings, msg):
+    def __init__(self, screen, settings, msg, pos):
         self.screen= screen
         self.screen_rect = screen.get_rect()
         
@@ -13,7 +13,7 @@ class Button():
         self.font = pygame.font.SysFont(None, 48)
         
         self.rect = pygame.Rect(0,0, self.width, self.height)
-        self.rect.center = self.screen_rect.center
+        self.rect.center = pos
         
         self.prep_msg(msg)
         
