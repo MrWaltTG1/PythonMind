@@ -1,16 +1,29 @@
-from turtle import screensize
 import pygame
 
 class Button():
     
-    def __init__(self, screen, settings, msg, pos):
+    def __init__(self, screen, settings, msg, pos, id):
         self.screen= screen
         self.screen_rect = screen.get_rect()
         
-        self.width, self.height = 200, 50
-        self.button_color = (5,255,255)
-        self.text_color = (0, 0, 0)
-        self.font = pygame.font.SysFont(None, 48)
+        self.pos = pos
+        self.msg = msg
+        
+        if id == "mm":
+            self.width, self.height = settings.mm_button_width, settings.mm_button_height
+            self.button_color = settings.mm_button_color
+            self.text_color = settings.mm_text_color
+            self.font_type = settings.mm_font_type
+            self.font_size = settings.mm_font_size
+        elif id == "om":
+            self.width, self.height = settings.om_button_width, settings.om_button_height
+            self.button_color = settings.om_button_color
+            self.text_color = settings.om_text_color
+            self.font_type = settings.om_font_type
+            self.font_size = settings.om_font_size
+        
+        
+        self.font = pygame.font.SysFont(self.font_type, self.font_size)
         
         self.rect = pygame.Rect(0,0, self.width, self.height)
         self.rect.center = pos
@@ -18,7 +31,7 @@ class Button():
         self.prep_msg(msg)
         
     def prep_msg(self, msg):
-        self.msg_image = self.font.render(msg, True, self.text_color, self.button_color)
+        self.msg_image = self.font.render(msg, True, self.text_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
     
