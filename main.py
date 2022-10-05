@@ -1,3 +1,4 @@
+from random import randint
 import pygame
 import game_functions as gf
 from settings import Settings
@@ -27,6 +28,7 @@ def run():
         
         gf.check_events(settings, screen, main_menu, option_menu)
         gf.update_screen(settings, screen, main_menu, option_menu)
-            
+
+
 
 run()
