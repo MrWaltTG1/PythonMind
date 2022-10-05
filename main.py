@@ -1,7 +1,7 @@
 import pygame
 import game_functions as gf
 from settings import Settings
-from main_menu import Main_menu, Options
+from main_menu import Main_menu, Options, Start_menu
 
 
 def run():
@@ -15,6 +15,7 @@ def run():
     
     main_menu = Main_menu(settings, screen)
     option_menu = Options(settings, screen)
+    start_menu = Start_menu(settings, screen)
     while True:        
         clockobject = pygame.time.Clock()
         clockobject.tick(60)
@@ -22,11 +23,14 @@ def run():
         menu_dict = {
             "main_menu" : main_menu,
             "option_menu" : option_menu,
+            "start_menu" : start_menu
         }
         if main_menu.active:
             main_menu.update(menu_dict)
         elif option_menu.active:
             option_menu.update(menu_dict)
+        elif start_menu.active:
+            start_menu.update(menu_dict)
         
         gf.check_events(settings, screen, menu_dict)
         gf.update_screen(settings, screen, menu_dict)

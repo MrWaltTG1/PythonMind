@@ -31,3 +31,11 @@ class Settings():
         self.sl_circle_color = (139,0,139)
         self.sl_text_color = (230,230,230)
         self.sl_font_type, self.sl_font_size = None, 50
+        
+        #Start Menu settings
+        self.sm_button_width = 300
+        self.sm_button_height = 50
+        self.sm_button_color = (139,0,139)
+        self.sm_button_color_hover = (75,0,130)
+        self.sm_text_color = (230,230,230)
+        self.sm_font_type, self.sm_font_size = None, 50
