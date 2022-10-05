@@ -3,7 +3,7 @@ import sys
 import pygame
 
 
-def update_screen(settings, screen, menu_dict):
+def update_screen(settings, screen, menu_dict, game_screen):
     
     screen.blit(settings.bg, settings.rect)
     
@@ -13,6 +13,8 @@ def update_screen(settings, screen, menu_dict):
         menu_dict["option_menu"].blitme()
     elif menu_dict["start_menu"].active:
         menu_dict["start_menu"].blitme()
+    else:
+        game_screen.update()
     
     dict = {
         1: [230, 230, 250],
@@ -34,26 +36,24 @@ def check_events(settings, screen, menu_dict):
         if event.type == pygame.QUIT:
             sys.exit()
         #Here go all the other event checks
-        elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event,settings, screen)
-        elif event.type == pygame.KEYUP:
-            check_keydown_events(event,settings,screen)
+        #FOR CLICKING THE MOUSE (ONE TIME EVENT)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             check_mouse_click_events(event, settings,screen, menu_dict)
         elif event.type == pygame.MOUSEBUTTONUP:
             pass
     
+    #FOR HOLDING DOWN THE MOUSE
     if pygame.mouse.get_pressed()[0]:
         check_mouse_hold_events(settings,screen,menu_dict)
             
-def check_keydown_events(event, settings, screen):
-    pass
 
 def check_mouse_click_events(event, settings,screen, menu_dict):
+    #Function for mouse clicks
     #Get the x and y location of where has been clicked
     x, y = event.pos
     
     if event.button == 1: #LEFT CLICK
+        #MENU INTERACTIONS
         if menu_dict["main_menu"].active:
             for button in menu_dict["main_menu"].button_list:
                 if button.rect.collidepoint(x,y):
@@ -72,7 +72,10 @@ def check_mouse_click_events(event, settings,screen, menu_dict):
                 if button.rect.collidepoint(x,y):
                     menu_dict["start_menu"].clicky_wicky_uwu(button)
                     break
+        #END OF MENU INTERACTIONS
+
 def check_mouse_hold_events(settings,screen,menu_dict, hold = False):
+    #Function for holding down the mouse button
     x,y = pygame.mouse.get_pos()
     
     #if event.button == 1: #LEFT CLICK
