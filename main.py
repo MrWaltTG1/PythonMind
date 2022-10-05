@@ -19,14 +19,17 @@ def run():
         clockobject = pygame.time.Clock()
         clockobject.tick(60)
         
-        menu_list = [main_menu, option_menu]
+        menu_dict = {
+            "main_menu" : main_menu,
+            "option_menu" : option_menu,
+        }
         if main_menu.active:
-            main_menu.update(menu_list)
+            main_menu.update(menu_dict)
         elif option_menu.active:
-            option_menu.update(menu_list)
+            option_menu.update(menu_dict)
         
-        gf.check_events(settings, screen, main_menu, option_menu)
-        gf.update_screen(settings, screen, main_menu, option_menu)
+        gf.check_events(settings, screen, menu_dict)
+        gf.update_screen(settings, screen, menu_dict)
             
 
 run()
