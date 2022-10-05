@@ -4,7 +4,7 @@ class Settings():
     def __init__(self):
         self.screen_width = 800
         self.screen_height = 800
-        self.bg = pygame.image.load("images/aardbeving.bmp")
+        self.bg = pygame.image.load("images/space.bmp")
         self.bg = pygame.transform.scale(self.bg, (self.screen_width, self.screen_height))
         self.rect = self.bg.get_rect()
         
@@ -24,10 +24,3 @@ class Settings():
         self.om_button_color_hover = (75,0,130)
         self.om_text_color = (230,230,230)
         self.om_font_type, self.om_font_size = None, 50
-        #Slider settings
-        self.sl_box_width = (300, 10)
-        self.sl_box_color = (75,0,130)
-        self.sl_circle_width = (10,10)
-        self.sl_circle_color = (139,0,139)
-        self.sl_text_color = (230,230,230)
-        self.sl_font_type, self.sl_font_size = None, 50
