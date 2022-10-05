@@ -11,6 +11,8 @@ def update_screen(settings, screen, menu_dict):
         menu_dict["main_menu"].blitme()
     elif menu_dict["option_menu"].active:
         menu_dict["option_menu"].blitme()
+    elif menu_dict["start_menu"].active:
+        menu_dict["start_menu"].blitme()
     
     dict = {
         1: [230, 230, 250],
@@ -65,7 +67,11 @@ def check_mouse_click_events(event, settings,screen, menu_dict):
             for slider in menu_dict["option_menu"].slider_list:
                 if slider.box_rect.collidepoint(x,y):
                     slider.circle_pos[0] = x
-
+        elif menu_dict["start_menu"].active:
+            for button in menu_dict["start_menu"].button_list:
+                if button.rect.collidepoint(x,y):
+                    menu_dict["start_menu"].clicky_wicky_uwu(button)
+                    break
 def check_mouse_hold_events(settings,screen,menu_dict, hold = False):
     x,y = pygame.mouse.get_pos()
     
