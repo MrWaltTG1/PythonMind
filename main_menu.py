@@ -178,4 +178,4 @@ class Start_menu():
             self.main_menu.active = True
         elif clicked_button.msg == "Start Game":
             self.active = False
-            sys.exit()
+            
