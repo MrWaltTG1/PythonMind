@@ -27,6 +27,12 @@ class Button():
             self.text_color = settings.sm_text_color
             self.font_type = settings.sm_font_type
             self.font_size = settings.sm_font_size
+        elif id == "gb":
+            self.width, self.height = settings.gb_button_width, settings.gb_button_height
+            self.button_color = settings.gb_button_color
+            self.text_color = settings.gb_text_color
+            self.font_type = settings.gb_font_type
+            self.font_size = settings.gb_font_size
         
         
         self.font = pygame.font.SysFont(self.font_type, self.font_size)

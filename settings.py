@@ -54,6 +54,13 @@ class Settings():
         self.guess_box_width = 600
         self.guess_box_height = 100
         self.guess_box_color =(50,50,50)
+        #button
+        self.gb_button_width = 80
+        self.gb_button_height = 20
+        self.gb_button_color = (139,0,139)
+        self.gb_button_color_hover = (75,0,130)
+        self.gb_text_color = (230,230,230)
+        self.gb_font_type, self.gb_font_size = None, 20
         
         #Game Screen -> Guess Area -> Guess pins
         self.guess_pin_color_inactive = (100,100,100)

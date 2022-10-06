@@ -16,7 +16,9 @@ def update_screen(settings, screen, menu_dict, game_screen):
     elif menu_dict["start_menu"].active:
         menu_dict["start_menu"].blitme()
     else:
+        game_screen.game_board.blitme()
         game_screen.guess_box.blitme()
+        if game_screen.game_board.new_guess : game_screen.game_board.new_guess.blitme()
         for pin in game_screen.guess_box.guess_pin_list:
             pin.blitme()
         game_screen.guess_box.color_pins_area.blitme()
@@ -33,6 +35,7 @@ def update_screen(settings, screen, menu_dict, game_screen):
     pygame.draw.circle(screen,color,(10,10),radius=50)
     pass"""
     
+    #display the last drawn screen
     pygame.display.flip()
     
 def check_events(settings, screen, menu_dict, game_screen):
@@ -79,17 +82,24 @@ def check_mouse_down_events(event, settings,screen, menu_dict, game_screen):
                     menu_dict["start_menu"].clicky_wicky_uwu(button)
                     break
         #END OF MENU INTERACTIONS
-        elif game_screen.guess_box.color_pins_area:
-            for pin in game_screen.guess_box.color_pins_area.pin_list:
-                if game_screen.guess_box.rect.collidepoint(x,y) and pin.rect.collidepoint(x,y):
-                    new_pin = create_draggable_pin(settings,screen,pos=(x,y),color = pin.color)
-                    game_screen.guess_box.color_pins_area.pin_list.append(new_pin)
-                    break
+        # ----------------------
+        #GAME SCREEN INTERACTIONS
+        elif game_screen.active:
+            #Create a new colored pin when left MOUSEBUTTONDOWN, and subsequently remove it when left MOUSEBUTTONUP
+            if game_screen.guess_box.rect.collidepoint(x,y):
+                for pin in game_screen.guess_box.color_pins_area.pin_list:
+                    if pin.rect.collidepoint(x,y):
+                        new_pin = create_draggable_pin(settings,screen,pos=(x,y),color = pin.color)
+                        game_screen.guess_box.color_pins_area.pin_list.append(new_pin)
+                        break
+                if game_screen.guess_box.confirm_box.rect.collidepoint(x,y):
+                    game_screen.guess_box.confirm_selection(game_screen.guess_box.confirm_box)
         
 
 def check_mouse_up_events(event, settings,screen, menu_dict, game_screen):
     x,y = event.pos
     if event.button == 1: #LEFT CLICK
+        #Disables the hold feature of holding down the mouse button
         check_mouse_hold_events(settings,screen,menu_dict, game_screen, hold=False)
 
 def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
@@ -102,6 +112,7 @@ def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
                 if slider.box_rect.collidepoint(x,y):
                     slider.circle_pos[0] = x
         if game_screen.active:
+            #Go past the first 6 pins that should remain static
             for pin in game_screen.guess_box.color_pins_area.pin_list[6:]:
                 if game_screen.guess_box.rect.collidepoint(x,y):
                     pin.rect.center = (x,y)
@@ -109,7 +120,6 @@ def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
                     #print([k for k, v in settings.colors.items() if v == new_pin.color][0])
     else:
         if len(game_screen.guess_box.color_pins_area.pin_list) > 6:
-            
             for guess_pin in game_screen.guess_box.guess_pin_list:
                 #for pin in game_screen.guess_box.color_pins_area.pin_list[5:]:
                     if guess_pin.rect.collidepoint(game_screen.guess_box.color_pins_area.pin_list[-1].rect.center):
