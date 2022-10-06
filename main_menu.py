@@ -156,8 +156,9 @@ class Start_menu():
             self.button_list.append(new_button)
             self.button_pos[1] -= self.button_height * 2
     
-    def update(self, menu_dict):
+    def update(self, menu_dict, game_screen):
         self.main_menu = menu_dict["main_menu"]
+        self.game_screen = game_screen
         self.update_buttons()
         
     def update_buttons(self):
@@ -178,4 +179,5 @@ class Start_menu():
             self.main_menu.active = True
         elif clicked_button.msg == "Start Game":
             self.active = False
+            self.game_screen.active = True
             

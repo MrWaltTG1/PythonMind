@@ -4,7 +4,7 @@ class Settings():
     def __init__(self):
         self.screen_width = 800
         self.screen_height = 800
-        self.bg = pygame.image.load("images/aardbeving.bmp")
+        self.bg = pygame.image.load("images/whitebig.bmp")
         self.bg = pygame.transform.scale(self.bg, (self.screen_width, self.screen_height))
         self.rect = self.bg.get_rect()
         
@@ -40,6 +40,16 @@ class Settings():
         self.sm_text_color = (230,230,230)
         self.sm_font_type, self.sm_font_size = None, 50
         
+        #Game settings
+        self.colors =  {
+            "red" : (255,0,0),
+            "blue" : (0,0,255),
+            "green" : (0,255,0),
+            "yellow" : (255,255,0),
+            "orange" : (255,165,0),
+            "purple" : (153,50,204)
+            }
+        
         #Game Screen -> Guess Area
         self.guess_box_width = 600
         self.guess_box_height = 100
@@ -47,5 +57,5 @@ class Settings():
         
         #Game Screen -> Guess Area -> Guess pins
         self.guess_pin_color_inactive = (100,100,100)
-        self.guess_pin_outline = 0
+        self.guess_pin_radius = 35
         self.guess_pin_outline = 0

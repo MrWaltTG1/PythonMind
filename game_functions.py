@@ -2,6 +2,8 @@ from random import randint
 import sys
 import pygame
 
+from guess_area import Guesspincolor
+
 
 def update_screen(settings, screen, menu_dict, game_screen):
     
@@ -14,9 +16,12 @@ def update_screen(settings, screen, menu_dict, game_screen):
     elif menu_dict["start_menu"].active:
         menu_dict["start_menu"].blitme()
     else:
-        game_screen.update()
+        game_screen.guess_box.blitme()
+        for pin in game_screen.guess_box.guess_pin_list:
+            pin.blitme()
+        game_screen.guess_box.color_pins_area.blitme()
     
-    dict = {
+    """dict = {
         1: [230, 230, 250],
         2: [255, 165, 0],
         3: [233, 150, 122],
@@ -26,11 +31,11 @@ def update_screen(settings, screen, menu_dict, game_screen):
     }
     color = dict[randint(1,6)]
     pygame.draw.circle(screen,color,(10,10),radius=50)
-    pass
+    pass"""
     
     pygame.display.flip()
     
-def check_events(settings, screen, menu_dict):
+def check_events(settings, screen, menu_dict, game_screen):
     for event in pygame.event.get():
         #If event is quit then quit
         if event.type == pygame.QUIT:
@@ -38,16 +43,17 @@ def check_events(settings, screen, menu_dict):
         #Here go all the other event checks
         #FOR CLICKING THE MOUSE (ONE TIME EVENT)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            check_mouse_click_events(event, settings,screen, menu_dict)
+            check_mouse_down_events(event, settings,screen, menu_dict, game_screen)
         elif event.type == pygame.MOUSEBUTTONUP:
-            pass
+            check_mouse_up_events(event, settings,screen, menu_dict, game_screen)
     
     #FOR HOLDING DOWN THE MOUSE
     if pygame.mouse.get_pressed()[0]:
-        check_mouse_hold_events(settings,screen,menu_dict)
+        check_mouse_hold_events(settings,screen,menu_dict, game_screen, hold=True)
+
             
 
-def check_mouse_click_events(event, settings,screen, menu_dict):
+def check_mouse_down_events(event, settings,screen, menu_dict, game_screen):
     #Function for mouse clicks
     #Get the x and y location of where has been clicked
     x, y = event.pos
@@ -73,16 +79,42 @@ def check_mouse_click_events(event, settings,screen, menu_dict):
                     menu_dict["start_menu"].clicky_wicky_uwu(button)
                     break
         #END OF MENU INTERACTIONS
+        elif game_screen.guess_box.color_pins_area:
+            for pin in game_screen.guess_box.color_pins_area.pin_list:
+                if game_screen.guess_box.rect.collidepoint(x,y) and pin.rect.collidepoint(x,y):
+                    new_pin = create_draggable_pin(settings,screen,pos=(x,y),color = pin.color)
+                    game_screen.guess_box.color_pins_area.pin_list.append(new_pin)
+                    break
+        
 
-def check_mouse_hold_events(settings,screen,menu_dict, hold = False):
+def check_mouse_up_events(event, settings,screen, menu_dict, game_screen):
+    x,y = event.pos
+    if event.button == 1: #LEFT CLICK
+        check_mouse_hold_events(settings,screen,menu_dict, game_screen, hold=False)
+
+def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
     #Function for holding down the mouse button
     x,y = pygame.mouse.get_pos()
-    
-    #if event.button == 1: #LEFT CLICK
-    if menu_dict["option_menu"].active:
-        for slider in menu_dict["option_menu"].slider_list:
-            if slider.box_rect.collidepoint(x,y):
-                hold = True
-                slider.circle_pos[0] = x
-            if hold:
-                slider.circle_pos[0] = x
+    if hold:
+        #if event.button == 1: #LEFT CLICK
+        if menu_dict["option_menu"].active:
+            for slider in menu_dict["option_menu"].slider_list:
+                if slider.box_rect.collidepoint(x,y):
+                    slider.circle_pos[0] = x
+        if game_screen.active:
+            for pin in game_screen.guess_box.color_pins_area.pin_list[6:]:
+                if game_screen.guess_box.rect.collidepoint(x,y):
+                    pin.rect.center = (x,y)
+                    #Print color
+                    #print([k for k, v in settings.colors.items() if v == new_pin.color][0])
+    else:
+        if len(game_screen.guess_box.color_pins_area.pin_list) > 6:
+            
+            for guess_pin in game_screen.guess_box.guess_pin_list:
+                #for pin in game_screen.guess_box.color_pins_area.pin_list[5:]:
+                    if guess_pin.rect.collidepoint(game_screen.guess_box.color_pins_area.pin_list[-1].rect.center):
+                            guess_pin.color = game_screen.guess_box.color_pins_area.pin_list[-1].color
+            game_screen.guess_box.color_pins_area.pin_list.pop()
+
+def create_draggable_pin(settings,screen,pos,color):
+    return Guesspincolor(settings,screen,pos,color)
