@@ -49,6 +49,7 @@ class Settings():
             "orange" : (255,165,0),
             "purple" : (153,50,204)
             }
+        self.max_time = 300000 #5 mins   #In ms
         
         #Game Screen -> Guess Area
         self.guess_box_width = 600

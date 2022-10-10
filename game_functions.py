@@ -1,4 +1,4 @@
-from random import randint
+
 import sys
 import pygame
 
@@ -17,6 +17,7 @@ def update_screen(settings, screen, menu_dict, game_screen):
         menu_dict["start_menu"].blitme()
     else:
         game_screen.game_board.blitme()
+        game_screen.draw_timer()
         game_screen.guess_box.blitme()
         for guess in game_screen.game_board.total_guesses:
             guess.blitme()
@@ -36,6 +37,12 @@ def update_screen(settings, screen, menu_dict, game_screen):
     pygame.draw.circle(screen,color,(10,10),radius=50)
     pass"""
     
+    """ mylist = [[230, 230, 250],[255, 165, 0], [233, 150, 122]]
+    
+    color_list = random.choices(mylist, k=4)
+    for color in color_list:
+        pygame.draw.circle(screen,color,(10,10),radius=50)
+    """
     #display the last drawn screen
     pygame.display.flip()
     
@@ -129,3 +136,14 @@ def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
 
 def create_draggable_pin(settings,screen,pos,color):
     return Guesspincolor(settings,screen,pos,color)
+
+def convert_ticks_to_time(ticks):
+    time_list= []
+    counting_minutes = str(int(ticks/60)).zfill(2)
+    counting_seconds = str(int((ticks%6000)/100)).zfill(2)
+    counting_millisecond = str(int(ticks%1000)).zfill(3)
+    
+    time_list.append(counting_minutes)
+    time_list.append(counting_seconds)
+    time_list.append(counting_millisecond)
+    return time_list

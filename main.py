@@ -22,7 +22,7 @@ def run():
 
     while True:        
         clockobject = pygame.time.Clock()
-        clockobject.tick(60)
+        clockobject.tick(30)
         
         menu_dict = {
             "main_menu" : main_menu,

@@ -70,6 +70,7 @@ class Options():
         button_text = ["Back"]
         self.create_buttons(button_text)
         self.create_slider()
+        
     
     def create_buttons(self, button_text):
         self.button_list = []
@@ -77,7 +78,7 @@ class Options():
         for button_message in button_text:
             new_button = Button(self.screen, self.settings, button_message, self.button_pos, "om")
             self.button_list.append(new_button)
-            self.button_pos[1] += self.button_height * 2
+            self.button_pos[1] -= self.button_height * 2
     
     def create_slider(self):
         pos = (100,500)
@@ -108,7 +109,6 @@ class Options():
                 
             percent_max = slider.box_rect.width
             percentage = 100 * (slider.circle_pos[0] - slider.box_rect.left) / percent_max
-            percentage
             slider.prep_msg(int(percentage))
 
 
@@ -124,8 +124,19 @@ class Options():
         if clicked_button.msg == "Back":
             self.active = False
             self.main_menu.active = True
+        elif clicked_button.msg == "Resolution":
+            pass
+            self.resolution_dd()
 
-            
+    def resolution_dd(self):
+        """THIS DOES NOT WORK"""
+        self.resolution_list = ((1920,1080),(800,600))
+        
+        current_resolution = (self.settings.screen_width, self.settings.screen_height)
+        new_resolution = self.resolution_list[0]
+        
+        self.settings.rect = new_resolution
+        self.settings.bg = pygame.transform.scale(self.settings.bg, new_resolution)
             
 """
 
@@ -180,4 +191,5 @@ class Start_menu():
         elif clicked_button.msg == "Start Game":
             self.active = False
             self.game_screen.active = True
+            self.game_screen.create_timer()
             
