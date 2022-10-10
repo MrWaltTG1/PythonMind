@@ -4,11 +4,7 @@ class Settings():
     def __init__(self):
         self.screen_width = 800
         self.screen_height = 800
-<<<<<<< HEAD
-        self.bg = pygame.image.load("images/space.bmp")
-=======
         self.bg = pygame.image.load("images/whitebig.bmp")
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
         self.bg = pygame.transform.scale(self.bg, (self.screen_width, self.screen_height))
         self.rect = self.bg.get_rect()
         
@@ -27,9 +23,6 @@ class Settings():
         self.om_button_color = (139,0,139)
         self.om_button_color_hover = (75,0,130)
         self.om_text_color = (230,230,230)
-<<<<<<< HEAD
-        self.om_font_type, self.om_font_size = None, 50
-=======
         self.om_font_type, self.om_font_size = None, 50
         #Slider settings
         self.sl_box_width = (300, 10)
@@ -73,4 +66,3 @@ class Settings():
         self.guess_pin_color_inactive = (100,100,100)
         self.guess_pin_radius = 35
         self.guess_pin_outline = 0
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103

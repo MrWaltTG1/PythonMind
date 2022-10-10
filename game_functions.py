@@ -4,28 +4,6 @@ import pygame
 
 from guess_area import Guesspincolor
 
-<<<<<<< HEAD
-def update_screen(settings, screen, main_menu, option_menu):
-    
-    screen.blit(settings.bg, settings.rect)
-    
-    if main_menu.active:
-        main_menu.blitme()
-    elif option_menu.active:
-        option_menu.blitme()
-    
-    dict = {
-        1: [230, 230, 250],
-        2: [255, 165, 0],
-        3: [233, 150, 122],
-        4: [176, 224, 230],
-        5: [127, 255, 0],
-        6: [255, 255, 51]
-    }
-    color = dict[randint(1,6)]
-    pygame.draw.circle(screen,color,(10,10),radius=50)
-    pass
-=======
 
 def update_screen(settings, screen, menu_dict, game_screen):
     
@@ -45,7 +23,6 @@ def update_screen(settings, screen, menu_dict, game_screen):
         for pin in game_screen.guess_box.guess_pin_list:
             pin.blitme()
         game_screen.guess_box.color_pins_area.blitme()
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
     
     """dict = {
         1: [230, 230, 250],
@@ -62,26 +39,14 @@ def update_screen(settings, screen, menu_dict, game_screen):
     #display the last drawn screen
     pygame.display.flip()
     
-<<<<<<< HEAD
-def check_events(settings, screen, main_menu, option_menu):
-=======
 def check_events(settings, screen, menu_dict, game_screen):
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
     for event in pygame.event.get():
         #If event is quit then quit
         if event.type == pygame.QUIT:
-            sys.exit
+            sys.exit()
         #Here go all the other event checks
         #FOR CLICKING THE MOUSE (ONE TIME EVENT)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-<<<<<<< HEAD
-            check_mouse_click_events(event, settings,screen, main_menu, option_menu)
-            
-def check_keydown_events(event, settings, screen):
-    pass
-
-def check_mouse_click_events(event, settings,screen, main_menu, option_menu):
-=======
             check_mouse_down_events(event, settings,screen, menu_dict, game_screen)
         elif event.type == pygame.MOUSEBUTTONUP:
             check_mouse_up_events(event, settings,screen, menu_dict, game_screen)
@@ -94,29 +59,19 @@ def check_mouse_click_events(event, settings,screen, main_menu, option_menu):
 
 def check_mouse_down_events(event, settings,screen, menu_dict, game_screen):
     #Function for mouse clicks
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
     #Get the x and y location of where has been clicked
     x, y = event.pos
     
     if event.button == 1: #LEFT CLICK
-<<<<<<< HEAD
-        if main_menu.active:
-            for button in main_menu.button_list:
-=======
         #MENU INTERACTIONS
         if menu_dict["main_menu"].active:
             for button in menu_dict["main_menu"].button_list:
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
                 if button.rect.collidepoint(x,y):
-                    main_menu.clicky_wicky_uwu(button)
+                    menu_dict["main_menu"].clicky_wicky_uwu(button)
                     break
-        elif option_menu.active:
-            for button in option_menu.button_list:
+        elif menu_dict["option_menu"].active:
+            for button in menu_dict["option_menu"].button_list:
                 if button.rect.collidepoint(x,y):
-<<<<<<< HEAD
-                    option_menu.clicky_wicky_uwu(button)
-                    break
-=======
                     menu_dict["option_menu"].clicky_wicky_uwu(button)
                     break
             for slider in menu_dict["option_menu"].slider_list:
@@ -174,4 +129,3 @@ def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
 
 def create_draggable_pin(settings,screen,pos,color):
     return Guesspincolor(settings,screen,pos,color)
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103

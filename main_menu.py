@@ -1,20 +1,23 @@
 import sys
 import pygame
 from button import Button
+from slider import Slider
 
 class Main_menu():
+    #The main men
     def __init__(self, settings, screen) -> None:
-        self.button_width = settings.mm_button_width
-        self.button_height = settings.mm_button_height
         self.screen = screen
         self.settings = settings
         
         self.active = True
         
+        self.button_height = settings.mm_button_height
+        #these are the options to select from
         button_text = ["Start", "Options", "Quit"]
         self.create_buttons(button_text)
     
     def create_buttons(self, button_text):
+        #Create a button for every option given
         self.button_list = []
         self.button_pos = [self.settings.screen_width / 2, 300]
         for button_message in button_text:
@@ -22,14 +25,9 @@ class Main_menu():
             self.button_list.append(new_button)
             self.button_pos[1] += self.button_height * 2
     
-<<<<<<< HEAD
-    def update(self, menu_list):
-        self.option_menu = menu_list[1]
-=======
     def update(self, menu_dict):
         self.option_menu = menu_dict["option_menu"]
         self.start_menu = menu_dict["start_menu"]
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
         
         self.update_buttons()
         
@@ -71,8 +69,6 @@ class Options():
         
         button_text = ["Back"]
         self.create_buttons(button_text)
-<<<<<<< HEAD
-=======
         self.create_slider()
     
     def create_buttons(self, button_text):
@@ -149,7 +145,6 @@ class Start_menu():
         
         button_text = ["Back", "Start Game"]
         self.create_buttons(button_text)
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
     
     def create_buttons(self, button_text):
         self.button_list = []
@@ -170,15 +165,9 @@ class Start_menu():
         x,y  = pygame.mouse.get_pos()
         for button in self.button_list:
             if button.rect.collidepoint(x,y):
-<<<<<<< HEAD
-                button.button_color = self.settings.mm_button_color_hover
-            else:
-                button.button_color = self.settings.mm_button_color
-=======
                 button.button_color = self.settings.sm_button_color_hover
             else:
                 button.button_color = self.settings.sm_button_color
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
     
     def blitme(self):
         for button in self.button_list:
@@ -188,13 +177,7 @@ class Start_menu():
         if clicked_button.msg == "Back":
             self.active = False
             self.main_menu.active = True
-<<<<<<< HEAD
-            
-class Start_menu():
-    pass
-=======
         elif clicked_button.msg == "Start Game":
             self.active = False
             self.game_screen.active = True
             
->>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
