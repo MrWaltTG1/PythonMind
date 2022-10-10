@@ -1,3 +1,4 @@
+from random import randint
 import pygame
 import game_functions as gf
 from settings import Settings
@@ -24,14 +25,26 @@ def run():
         clockobject = pygame.time.Clock()
         clockobject.tick(60)
         
+<<<<<<< HEAD
+        menu_list = [main_menu, option_menu]
+=======
         menu_dict = {
             "main_menu" : main_menu,
             "option_menu" : option_menu,
             "start_menu" : start_menu
         }
+>>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
         if main_menu.active:
-            main_menu.update(menu_dict)
+            main_menu.update(menu_list)
         elif option_menu.active:
+<<<<<<< HEAD
+            option_menu.update(menu_list)
+        
+        gf.check_events(settings, screen, main_menu, option_menu)
+        gf.update_screen(settings, screen, main_menu, option_menu)
+
+
+=======
             option_menu.update(menu_dict)
         elif start_menu.active:
             start_menu.update(menu_dict, game_screen)
@@ -41,5 +54,6 @@ def run():
         gf.check_events(settings, screen, menu_dict, game_screen)
         gf.update_screen(settings, screen, menu_dict, game_screen)
             
+>>>>>>> 154f93c11eebd5b2a55f619d31e5d76bd8182103
 
 run()
