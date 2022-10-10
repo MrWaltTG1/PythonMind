@@ -58,8 +58,12 @@ class Guessbox():
             self.push_guess()
             
     def push_guess(self):
-        i=1
-        self.game_board.guess_dict[i] = self.color_list
+        guess_dict = {
+            "colors" : self.color_list,
+        }
+        self.game_board.guess_list.append(guess_dict)
+        self.game_board.new_guess = True
+
         
         
     def blitme(self):

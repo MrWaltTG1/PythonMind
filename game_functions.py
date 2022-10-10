@@ -18,7 +18,8 @@ def update_screen(settings, screen, menu_dict, game_screen):
     else:
         game_screen.game_board.blitme()
         game_screen.guess_box.blitme()
-        if game_screen.game_board.new_guess : game_screen.game_board.new_guess.blitme()
+        for guess in game_screen.game_board.total_guesses:
+            guess.blitme()
         for pin in game_screen.guess_box.guess_pin_list:
             pin.blitme()
         game_screen.guess_box.color_pins_area.blitme()
