@@ -69,6 +69,7 @@ class Guess():
             pygame.draw.circle(self.screen,color,pos,self.settings.guess_pin_radius)
             pos = (pos[0] + self.settings.guess_pin_radius * 2 + 20, self.bbox.midleft[1])
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
     def get_results(self):
         self.result_type_list = ["full", "half", "none"]
@@ -96,6 +97,8 @@ class Guess():
         self.draw_pins()
         self.draw_results()
 =======
+=======
+>>>>>>> Stashed changes
 
 class Computer():
     def __init__(self, settings, screen):
@@ -111,5 +114,9 @@ class Computer():
 
         color_list = random.choices(mylist, k=4)
         for color in color_list:
+<<<<<<< Updated upstream
+            pygame.draw.circle(screen,color,center,radius=50)
+>>>>>>> Stashed changes
+=======
             pygame.draw.circle(screen,color,center,radius=50)
 >>>>>>> Stashed changes
