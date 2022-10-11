@@ -1,9 +1,6 @@
 import random
 import pygame
 
-import random
-from random import randint
-from settings import Settings
 
 class Gameboard():
     def __init__(self, settings,screen) -> None:
@@ -47,7 +44,6 @@ class Gameboard():
     
     def blitme(self): 
         pygame.draw.rect(self.screen,self.color,self.rect, 5)
-        #self.new_guess.blitme()
         
 class Guess():
     def __init__(self, settings,screen, pos, colors) -> None:
@@ -72,8 +68,8 @@ class Guess():
     def get_results(self):
         self.result_type_list = ["full", "half", "none"]
         
-        #self.result_list = random.choices(self.result_type_list, k=4)
-        self.result_list = ["full","full","full","full"]
+        self.result_list = random.choices(self.result_type_list, k=4)
+        #self.result_list = ["full","full","full","full"]
         self.result_list.sort()
         
         if self.result_list == ["full","full","full","full"]:

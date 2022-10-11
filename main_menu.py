@@ -83,6 +83,7 @@ class Options():
     def create_slider(self):
         pos = (100,500)
         self.slider_list = []
+        #min, default, max
         sliderlist = (0,50,100)
         new_slider = Slider(self.settings,self.screen,pos,sliderlist)
         self.slider_list.append(new_slider)
@@ -111,7 +112,6 @@ class Options():
             percent_max = slider.box_rect.width
             percentage = 100 * (slider.circle_pos[0] - slider.box_rect.left) / percent_max
             slider.calculations(int(percentage))
-
 
     
     def blitme(self):
@@ -158,6 +158,7 @@ class Start_menu():
         button_text = ["Back", "Start Game"]
         self.create_buttons(button_text)
         self.create_sliders()
+        self.create_text_box()
     
     def create_buttons(self, button_text):
         self.button_list = []
@@ -177,11 +178,20 @@ class Start_menu():
         default = self.settings.default_time
         max = self.settings.max_time
         mylist = (min,default,max)
-        pos = (self.settings.screen_width - 400,100)
+        pos = (self.settings.screen_width - 330,100)
         new_slider = Slider(self.settings,self.screen,pos,mylist, is_time=True)
         self.slider_list.append(new_slider)
         
-        
+    def create_text_box(self):
+        pos = (50,50)
+        size = (400,500)
+        self.text_box = pygame.rect.Rect(pos,size)
+        with open('tutorial.txt', 'r') as f:
+            msg = f.readlines()
+        self.font = pygame.font.SysFont(self.settings.sm_font_type, 15)
+        self.msg_image = self.font.render(msg[0], True, self.settings.sm_text_color)
+        self.msg_image_rect = self.msg_image.get_rect()
+        self.msg_image_rect.center = self.text_box.center
     
     def update(self, menu_dict, game_screen):
         self.main_menu = menu_dict["main_menu"]
@@ -212,6 +222,8 @@ class Start_menu():
                 
     
     def blitme(self):
+        pygame.draw.rect(self.screen,(0,0,0),self.text_box,width=2)
+        self.screen.blit(self.msg_image, self.msg_image_rect)
         for button in self.button_list:
             button.draw_button()
         for slider in self.slider_list:
@@ -225,5 +237,3 @@ class Start_menu():
             self.active = False
             self.game_screen.active = True
             self.game_screen.create_timer(self.slider_list[0].new_ticks)
-            pass
-            

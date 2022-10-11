@@ -1,0 +1,11 @@
+Decide who will be the first Codemaker. That player must lift the Secrecy screen at the end of the unit and insert four Code pegs (their secret code) into the holes underneath.
+
+Note: Make sure the unit is positioned so that the Decoder definitely can't see the code!
+
+The code can be made up of any combination of the colored pegs. You may not use two or more pegs of the same color.
+
+Once the code is set, the Decoder can begin guessing, trying to duplicate the exact colors and positions of the hidden Code pegs.
+
+Each guess is made by placing a row of Code pegs on the unit. Each row of pegs should be left in position throughout the game.
+
+After every guess, the Codemaker must inform the Decoder of their progress using the sliding indicator arms (at the sides of the unit) as follows:

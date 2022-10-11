@@ -1,15 +1,13 @@
 import pygame
 import game_functions as gf
-from settings import Settings
-from main_menu import Main_menu, Options, Start_menu
 from game_screen import GameScreen
+from main_menu import Main_menu, Options, Start_menu
+from settings import Settings
 
 
 def run():
     pygame.init()
     settings = Settings()
-    
-    
     
     screen=pygame.display.set_mode((settings.screen_width, settings.screen_height), vsync= 1)
     pygame.display.set_caption("PythonMind")
@@ -38,7 +36,6 @@ def run():
         else:
             game_screen.update()
         
-                
         gf.check_events(settings, screen, menu_dict, game_screen)
         gf.update_screen(settings, screen, menu_dict, game_screen)
             
