@@ -83,7 +83,8 @@ class Options():
     def create_slider(self):
         pos = (100,500)
         self.slider_list = []
-        new_slider = Slider(self.settings,self.screen,pos)
+        sliderlist = (0,50,100)
+        new_slider = Slider(self.settings,self.screen,pos,sliderlist)
         self.slider_list.append(new_slider)
     
     def update(self, menu_dict):
@@ -109,7 +110,7 @@ class Options():
                 
             percent_max = slider.box_rect.width
             percentage = 100 * (slider.circle_pos[0] - slider.box_rect.left) / percent_max
-            slider.prep_msg(int(percentage))
+            slider.calculations(int(percentage))
 
 
     
@@ -156,6 +157,7 @@ class Start_menu():
         
         button_text = ["Back", "Start Game"]
         self.create_buttons(button_text)
+        self.create_sliders()
     
     def create_buttons(self, button_text):
         self.button_list = []
@@ -167,10 +169,25 @@ class Start_menu():
             self.button_list.append(new_button)
             self.button_pos[1] -= self.button_height * 2
     
+    def create_sliders(self):
+        self.slider_list = []
+        
+        #Time slider
+        min = self.settings.min_time
+        default = self.settings.default_time
+        max = self.settings.max_time
+        mylist = (min,default,max)
+        pos = (self.settings.screen_width - 400,100)
+        new_slider = Slider(self.settings,self.screen,pos,mylist, is_time=True)
+        self.slider_list.append(new_slider)
+        
+        
+    
     def update(self, menu_dict, game_screen):
         self.main_menu = menu_dict["main_menu"]
         self.game_screen = game_screen
         self.update_buttons()
+        self.update_sliders()
         
     def update_buttons(self):
         x,y  = pygame.mouse.get_pos()
@@ -179,10 +196,26 @@ class Start_menu():
                 button.button_color = self.settings.sm_button_color_hover
             else:
                 button.button_color = self.settings.sm_button_color
+                
+    def update_sliders(self):
+        x,y = pygame.mouse.get_pos()
+        for slider in self.slider_list:
+            #If mouse is on the slider do:
+            if slider.box_rect.collidepoint(x,y):
+                pass
+                #print("On slider box")
+                
+            percent_max = slider.box_rect.width
+            percentage = 100 * (slider.circle_pos[0] - slider.box_rect.left) / percent_max
+            slider.percentage = percentage
+            slider.calculations(int(percentage))
+                
     
     def blitme(self):
         for button in self.button_list:
             button.draw_button()
+        for slider in self.slider_list:
+            slider.blitme()
             
     def clicky_wicky_uwu(self, clicked_button):
         if clicked_button.msg == "Back":
@@ -191,5 +224,6 @@ class Start_menu():
         elif clicked_button.msg == "Start Game":
             self.active = False
             self.game_screen.active = True
-            self.game_screen.create_timer()
+            self.game_screen.create_timer(self.slider_list[0].new_ticks)
+            pass
             

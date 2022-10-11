@@ -24,6 +24,8 @@ def update_screen(settings, screen, menu_dict, game_screen):
         for pin in game_screen.guess_box.guess_pin_list:
             pin.blitme()
         game_screen.guess_box.color_pins_area.blitme()
+        if game_screen.won:
+            game_screen.retry_button.draw_button()
     
     """dict = {
         1: [230, 230, 250],
@@ -89,6 +91,9 @@ def check_mouse_down_events(event, settings,screen, menu_dict, game_screen):
                 if button.rect.collidepoint(x,y):
                     menu_dict["start_menu"].clicky_wicky_uwu(button)
                     break
+            for slider in menu_dict["start_menu"].slider_list:
+                if slider.box_rect.collidepoint(x,y):
+                    slider.circle_pos[0] = x
         #END OF MENU INTERACTIONS
         # ----------------------
         #GAME SCREEN INTERACTIONS
@@ -119,6 +124,10 @@ def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
             for slider in menu_dict["option_menu"].slider_list:
                 if slider.box_rect.collidepoint(x,y):
                     slider.circle_pos[0] = x
+        elif menu_dict["start_menu"].active:
+            for slider in menu_dict["start_menu"].slider_list:
+                if slider.box_rect.collidepoint(x,y):
+                    slider.circle_pos[0] = x
         if game_screen.active:
             #Go past the first 6 pins that should remain static
             for pin in game_screen.guess_box.color_pins_area.pin_list[6:]:
@@ -139,9 +148,15 @@ def create_draggable_pin(settings,screen,pos,color):
 
 def convert_ticks_to_time(ticks):
     time_list= []
-    counting_minutes = str(int(ticks/60)).zfill(2)
-    counting_seconds = str(int((ticks%6000)/100)).zfill(2)
-    counting_millisecond = str(int(ticks%1000)).zfill(3)
+    
+    seconds = ticks / 1000
+    minutes = ticks / 60000
+    #print(seconds)
+    #print(minutes)
+    
+    counting_minutes = str(int(ticks/60000)).zfill(2)
+    counting_seconds = str(int((ticks%60000)/1000)).zfill(2)
+    counting_millisecond = str(int(ticks%1000)).zfill(2)
     
     time_list.append(counting_minutes)
     time_list.append(counting_seconds)

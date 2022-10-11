@@ -9,7 +9,7 @@ class Button():
         self.pos = pos
         self.msg = msg
         
-        if id == "mm":
+        if id == "mm" or id == "gs":
             self.width, self.height = settings.mm_button_width, settings.mm_button_height
             self.button_color = settings.mm_button_color
             self.text_color = settings.mm_text_color

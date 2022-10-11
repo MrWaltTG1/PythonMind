@@ -29,7 +29,7 @@ class Settings():
         self.sl_box_color = (75,0,130)
         self.sl_circle_width = (10,10)
         self.sl_circle_color = (139,0,139)
-        self.sl_text_color = (230,230,230)
+        self.sl_text_color = (0,0,0)
         self.sl_font_type, self.sl_font_size = None, 50
         
         #Start Menu settings
@@ -49,7 +49,9 @@ class Settings():
             "orange" : (255,165,0),
             "purple" : (153,50,204)
             }
-        self.max_time = 300000 #5 mins   #In ms
+        self.min_time = 0
+        self.default_time = 300000 #5 mins   #In ms
+        self.max_time = 1800000 #30 mins
         
         #Game Screen -> Guess Area
         self.guess_box_width = 600

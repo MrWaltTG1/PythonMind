@@ -22,7 +22,7 @@ def run():
 
     while True:        
         clockobject = pygame.time.Clock()
-        clockobject.tick(30)
+        clockobject.tick(60)
         
         menu_dict = {
             "main_menu" : main_menu,
@@ -37,6 +37,7 @@ def run():
             start_menu.update(menu_dict, game_screen)
         else:
             game_screen.update()
+        
                 
         gf.check_events(settings, screen, menu_dict, game_screen)
         gf.update_screen(settings, screen, menu_dict, game_screen)

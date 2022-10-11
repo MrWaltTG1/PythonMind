@@ -1,10 +1,17 @@
 import pygame
+import game_functions as gf
 
 class Slider():
-    def __init__(self,settings,screen,pos, msg = "hello") -> None:
+    def __init__(self,settings,screen,pos,sliderlist, msg = "No message has been given", is_time = False) -> None:
         self.screen = screen
         self.settings = settings
         self.pos = pos #Left top position
+        self.percentage = 50
+        self.is_time = is_time
+        self.sliderlist = sliderlist
+    
+        self.msg = msg
+            
         #The bounding box settings
         self.box_width = settings.sl_box_width
         self.box_color = settings.sl_box_color
@@ -14,10 +21,7 @@ class Slider():
         
         #Create the rect for the bounding box
         self.box_rect = pygame.Rect(self.pos, self.box_width)
-        #Place the sliding circle in the left-middle part of the box
-        self.circle_posy = self.box_rect.centery
-        self.circle_posx = self.box_rect.left
-        self.circle_pos = [self.circle_posx, self.circle_posy]
+
         
         #Text settings
         self.text_color = settings.sl_text_color
@@ -26,19 +30,40 @@ class Slider():
         self.font = pygame.font.SysFont(self.text_font, self.font_size)
         
         #create text above the slider
-        self.msg = msg
-        self.prep_msg(self.msg)
+        self.calculations(None)
+        
+        #Place the sliding circle in the left-middle part of the box
+        self.circle_posy = self.box_rect.centery
+        self.circle_posx = self.box_rect.left + self.box_rect.width * self.percentage
+        self.circle_pos = [self.circle_posx, self.circle_posy]
         
     def prep_msg(self, msg):
         #check to see if it is an integer or not
         if isinstance(msg, int):
-            self.msg = str(msg) + "%"
-        else: self.msg = msg
+            msg = str(msg) + "%"
+        else: msg = msg
         #transform the text into an image
-        self.msg_image = self.font.render(self.msg, True, self.text_color)
+        self.msg_image = self.font.render(msg, True, self.text_color)
         self.msg_image_rect = self.msg_image.get_rect()
         #place the message in the middle above the slider
         self.msg_image_rect.midbottom = self.box_rect.midtop
+    
+    def calculations(self, new_percent):
+        min, default, max = self.sliderlist
+        default_percentage = default / (max - min)
+        self.percentage = default_percentage
+        
+        if new_percent: self.percentage = new_percent
+        if self.is_time:
+            self.new_ticks = int(max *(self.percentage/100))
+            minutes, seconds, milliseconds = gf.convert_ticks_to_time(self.new_ticks)
+            self.msg = str("%s:%s" % (minutes, seconds))
+            pass
+        else:
+            self.msg = new_percent
+            self.new_ticks = None
+        
+        self.prep_msg(self.msg)
     
         
     def blitme(self):
