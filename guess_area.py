@@ -107,6 +107,7 @@ class Guesscolorpinarea():
         
         self.pin_list = []
         i = 1
+        pin_colour = None
         for pin in self.pin_pos_list:
             for index, colour in enumerate(self.settings.colors, start=1):
                 if index == i:
