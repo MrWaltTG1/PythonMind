@@ -28,7 +28,7 @@ def update_screen(settings, screen, menu_dict, game_screen):
             game_screen.retry_button.draw_button()
     
     """dict = {
-        1: [230, 230, 250],
+        1: [20, 20, 122],
         2: [255, 165, 0],
         3: [233, 150, 122],
         4: [176, 224, 230],

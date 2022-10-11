@@ -1,6 +1,10 @@
 import random
 import pygame
 
+import random
+from random import randint
+from settings import Settings
+
 class Gameboard():
     def __init__(self, settings,screen) -> None:
         self.screen = screen
@@ -64,6 +68,8 @@ class Guess():
         for color in self.colors:
             pygame.draw.circle(self.screen,color,pos,self.settings.guess_pin_radius)
             pos = (pos[0] + self.settings.guess_pin_radius * 2 + 20, self.bbox.midleft[1])
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
     def get_results(self):
         self.result_type_list = ["full", "half", "none"]
@@ -90,3 +96,27 @@ class Guess():
         pygame.draw.rect(self.screen,self.color,self.bbox,3)
         self.draw_pins()
         self.draw_results()
+=======
+=======
+>>>>>>> Stashed changes
+
+class Computer():
+    def __init__(self, settings, screen):
+        mylist = [
+            [255, 0, 0],
+            [0, 255, 0],
+            [255, 255, 0],
+            [255, 165, 0],
+            [153, 50, 204],
+            [0, 0, 255],
+        ]
+    
+
+        color_list = random.choices(mylist, k=4)
+        for color in color_list:
+<<<<<<< Updated upstream
+            pygame.draw.circle(screen,color,center,radius=50)
+>>>>>>> Stashed changes
+=======
+            pygame.draw.circle(screen,color,center,radius=50)
+>>>>>>> Stashed changes
