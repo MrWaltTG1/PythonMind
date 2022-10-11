@@ -26,7 +26,7 @@ def update_screen(settings, screen, menu_dict, game_screen):
         game_screen.guess_box.color_pins_area.blitme()
     
     """dict = {
-        1: [230, 230, 250],
+        1: [20, 20, 122],
         2: [255, 165, 0],
         3: [233, 150, 122],
         4: [176, 224, 230],
