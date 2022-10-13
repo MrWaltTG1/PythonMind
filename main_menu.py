@@ -187,11 +187,16 @@ class Start_menu():
         size = (400,500)
         self.text_box = pygame.rect.Rect(pos,size)
         with open('tutorial.txt', 'r') as f:
-            msg = f.readlines()
+            msg_list = f.readlines()
         self.font = pygame.font.SysFont(self.settings.sm_font_type, 15)
-        self.msg_image = self.font.render(msg[0], True, self.settings.sm_text_color)
-        self.msg_image_rect = self.msg_image.get_rect()
-        self.msg_image_rect.center = self.text_box.center
+        text_rect_list = []
+        for msg in msg_list:
+            self.msg_image = self.font.render(msg, True, self.settings.sm_text_color)
+            self.msg_image_rect = self.msg_image.get_rect()
+            self.msg_image_rect.center = self.text_box.center
+            text_rect_list.append((self.msg_image,self.msg_image_rect))
+            if text_rect_list:
+                self.msg_image_rect.midtop = text_rect_list[-1][1].midbottom
     
     def update(self, menu_dict, game_screen):
         self.main_menu = menu_dict["main_menu"]

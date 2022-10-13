@@ -39,5 +39,4 @@ def run():
         gf.check_events(settings, screen, menu_dict, game_screen)
         gf.update_screen(settings, screen, menu_dict, game_screen)
             
-
 run()

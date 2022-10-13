@@ -26,25 +26,7 @@ def update_screen(settings, screen, menu_dict, game_screen):
         game_screen.guess_box.color_pins_area.blitme()
         if game_screen.won:
             game_screen.retry_button.draw_button()
-    
-    """dict = {
-        1: [20, 20, 122],
-        2: [255, 165, 0],
-        3: [233, 150, 122],
-        4: [176, 224, 230],
-        5: [127, 255, 0],
-        6: [255, 255, 51]
-    }
-    color = dict[randint(1,6)]
-    pygame.draw.circle(screen,color,(10,10),radius=50)
-    pass"""
-    
-    """ mylist = [[230, 230, 250],[255, 165, 0], [233, 150, 122]]
-    
-    color_list = random.choices(mylist, k=4)
-    for color in color_list:
-        pygame.draw.circle(screen,color,(10,10),radius=50)
-    """
+
     #display the last drawn screen
     pygame.display.flip()
     
