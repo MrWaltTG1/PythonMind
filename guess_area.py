@@ -1,4 +1,5 @@
 
+import pygments
 from button import Button
 import pygame
 
@@ -67,7 +68,7 @@ class Guessbox():
         
         
     def blitme(self):
-        pygame.draw.rect(self.screen, self.color, self.rect, width=5, border_radius=2)
+        #pygame.draw.rect(self.screen, self.color, self.rect, width=5, border_radius=2)
         self.confirm_box.draw_button()
 
 class Guesspin():
@@ -139,4 +140,8 @@ class Guesspincolor():
         self.rect = pygame.draw.circle(self.screen, self.color, self.pos,self.radius)
         
     def blitme(self):
-        pygame.draw.circle(self.screen, self.color, self.rect.center,self.radius)
+        x, y = pygame.mouse.get_pos()
+        if self.rect.collidepoint(x,y):
+            pygame.draw.circle(self.screen,self.color,self.rect.center,self.radius + 2)
+        else: pygame.draw.circle(self.screen, self.color, self.rect.center,self.radius)
+        

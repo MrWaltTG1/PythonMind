@@ -5,7 +5,7 @@ class Button():
     def __init__(self, screen, settings, msg, pos, id):
         self.screen= screen
         self.screen_rect = screen.get_rect()
-        
+        self.settings = settings
         self.pos = pos
         self.msg = msg
         
@@ -48,5 +48,10 @@ class Button():
         self.msg_image_rect.center = self.rect.center
     
     def draw_button(self):
+        x,y = pygame.mouse.get_pos()
+        if self.rect.collidepoint(x,y):
+            self.button_color = self.settings.gb_button_color_hover
+        else:
+            self.button_color = self.settings.gb_button_color
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)

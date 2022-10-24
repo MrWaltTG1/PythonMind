@@ -21,6 +21,8 @@ class SecretCode():
         i=0
         while i < 4:
             random_color = random.choice(self.colorlist)
+            if self.settings.difficulty == 1:
+                self.colorlist.remove(random_color)
             pin_pos = (pin_pos[0]+ 80, pin_pos[1])
             new_pin = Guesspincolor(self.settings,self.screen,pin_pos,random_color)
             self.pin_list.append(new_pin)
@@ -36,4 +38,4 @@ class SecretCode():
     def blitme(self):
         for pin in self.pin_list:
             pin.blitme()
-        pygame.draw.rect(self.screen,self.settings.colors["purple"],self.bbox_rect,width=self.filled)
+        pygame.draw.rect(self.screen,self.settings.hud_colors['white'],self.bbox_rect,width=self.filled)

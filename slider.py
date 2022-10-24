@@ -2,12 +2,13 @@ import pygame
 import game_functions as gf
 
 class Slider():
-    def __init__(self,settings,screen,pos,sliderlist, msg = "No message has been given", is_time = False) -> None:
+    def __init__(self,settings,screen,pos,sliderlist, msg = "No message has been given", is_time = False, is_int = False) -> None:
         self.screen = screen
         self.settings = settings
         self.pos = pos #Left top position
         self.percentage = 50
         self.is_time = is_time
+        self.is_int = is_int
         self.sliderlist = sliderlist
     
         self.msg = msg
@@ -22,7 +23,6 @@ class Slider():
         #Create the rect for the bounding box
         self.box_rect = pygame.Rect(self.pos, self.box_width)
 
-        
         #Text settings
         self.text_color = settings.sl_text_color
         self.text_font = settings.sl_font_type
@@ -39,11 +39,13 @@ class Slider():
         
     def prep_msg(self, msg):
         #check to see if it is an integer or not
-        if isinstance(msg, int):
-            msg = str(msg) + "%"
-        else: msg = msg
+        if isinstance(msg, int) and not self.is_int:
+            self.msg = str(msg) + "%"
+        elif isinstance(msg,int) and self.is_int:
+            self.msg = str(msg)
+        else: self.msg = str(msg)
         #transform the text into an image
-        self.msg_image = self.font.render(msg, True, self.text_color)
+        self.msg_image = self.font.render(self.msg, True, self.text_color)
         self.msg_image_rect = self.msg_image.get_rect()
         #place the message in the middle above the slider
         self.msg_image_rect.midbottom = self.box_rect.midtop
@@ -57,16 +59,18 @@ class Slider():
         if self.is_time:
             self.new_ticks = int(max *(self.percentage/100))
             minutes, seconds, milliseconds = gf.convert_ticks_to_time(self.new_ticks)
-            self.msg = str("%s:%s" % (minutes, seconds))
+            msg = str("%s:%s" % (minutes, seconds))
             pass
+        elif self.is_int:
+            msg = int(max *(self.percentage/100))
         else:
-            self.msg = new_percent
+            msg = new_percent
             self.new_ticks = None
         
-        self.prep_msg(self.msg)
-    
-        
+        self.prep_msg(msg)
+
+
     def blitme(self):
-        pygame.draw.rect(self.screen, self.box_color, self.box_rect)
+        pygame.draw.rect(self.screen, self.box_color, self.box_rect,border_radius= 2)
         pygame.draw.circle(self.screen,self.circle_color,self.circle_pos, radius=5)
         self.screen.blit(self.msg_image, self.msg_image_rect)

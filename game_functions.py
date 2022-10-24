@@ -17,6 +17,7 @@ def update_screen(settings, screen, menu_dict, game_screen):
         menu_dict["start_menu"].blitme()
     else:
         game_screen.game_board.blitme()
+        game_screen.back_button.draw_button()
         game_screen.draw_timer()
         game_screen.guess_box.blitme()
         for guess in game_screen.game_board.total_guesses:
@@ -24,8 +25,11 @@ def update_screen(settings, screen, menu_dict, game_screen):
         for pin in game_screen.guess_box.guess_pin_list:
             pin.blitme()
         game_screen.guess_box.color_pins_area.blitme()
-        if game_screen.won:
+        if game_screen.won or game_screen.loss:
+            game_screen.blit_darken_screen()
             game_screen.retry_button.draw_button()
+
+        
 
     #display the last drawn screen
     pygame.display.flip()
@@ -89,6 +93,9 @@ def check_mouse_down_events(event, settings,screen, menu_dict, game_screen):
                         break
                 if game_screen.guess_box.confirm_box.rect.collidepoint(x,y):
                     game_screen.guess_box.confirm_selection(game_screen.guess_box.confirm_box)
+                
+            
+            game_screen.click((x,y))
         
 
 def check_mouse_up_events(event, settings,screen, menu_dict, game_screen):

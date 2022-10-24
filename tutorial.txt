@@ -1,11 +1,27 @@
-Decide who will be the first Codemaker. That player must lift the Secrecy screen at the end of the unit and insert four Code pegs (their secret code) into the holes underneath.
 
-Note: Make sure the unit is positioned so that the Decoder definitely can't see the code!
+ The Computer will create a 4-digit secret code
+ The code can be made up of any combination of
+ the colored pegs.
 
-The code can be made up of any combination of the colored pegs. You may not use two or more pegs of the same color.
+ Once the code is set, you can begin guessing
+ Try to duplicate the exact colors and positions
+ of the hidden Code pegs.
 
-Once the code is set, the Decoder can begin guessing, trying to duplicate the exact colors and positions of the hidden Code pegs.
+ Each guess is made by dragging a color to a pin
+ Once you have 4 pins colored in press confirm
 
-Each guess is made by placing a row of Code pegs on the unit. Each row of pegs should be left in position throughout the game.
+ After every guess, the Computer will inform you
+ of your progress using different pins on the
+  right side of your guess
 
-After every guess, the Codemaker must inform the Decoder of their progress using the sliding indicator arms (at the sides of the unit) as follows:
+ -A black circle means you have the right color
+  on the right space
+ -A grey circle means you have the right color
+ on the wrong space
+ -An empty circle means you're missing the right
+ color
+
+ You will have 16 guesses to correctly guess
+ the code
+
+ Good luck!

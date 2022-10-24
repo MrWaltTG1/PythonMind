@@ -1,6 +1,4 @@
-import random
 import pygame
-import collections
 from secret_code import SecretCode
 
 class Gameboard():
@@ -11,7 +9,7 @@ class Gameboard():
         self.pos = (settings.screen_width / 2, settings.screen_height / 2) #Top left position
         self.width = settings.screen_width * 0.9
         self.height = settings.screen_height * 0.85
-        self.color = (92, 64, 51)
+        self.color = self.settings.hud_colors['white']
         
         self.rect = pygame.Rect(self.pos, (self.width,self.height))
         self.rect.center = self.pos
@@ -21,8 +19,7 @@ class Gameboard():
         self.total_guesses = []
         self.index = 0
         self.won = False
-        self.create_secret_code()
-        self.secret_code = self.code.pin_list
+        self.secret_code = []
         
     def update(self):
         if self.new_guess:
@@ -66,7 +63,7 @@ class Guess():
         
         self.bbox = pygame.Rect(pos,(self.width,self.height))
         self.bbox.midtop = pos
-        self.color = (51,120,59)
+        self.color = self.settings.hud_colors['white']
     
     def draw_pins(self):
         pos = (self.bbox.midleft[0]  + self.settings.guess_pin_radius * 2 + 20, self.bbox.midleft[1])
@@ -114,6 +111,12 @@ class Guess():
             self.won = True
     
     def draw_results(self):
+        pos = [self.bbox.right - 155, self.bbox.centery]
+        size = [155, self.bbox.height]
+        result_rect = pygame.rect.Rect(pos, size)  # type: ignore
+        result_rect.midleft = pos  # type: ignore
+        pygame.draw.rect(self.screen,self.settings.hud_colors['white'],result_rect)
+        
         pos = [self.bbox.right - 120, self.bbox.centery]
         for result in self.result_list:
             if result == "full":
@@ -125,6 +128,10 @@ class Guess():
             pos[0] += 30
     
     def blitme(self):
-        pygame.draw.rect(self.screen,self.color,self.bbox,3)
+        #
+        shape_surf = pygame.Surface(self.bbox.size, pygame.SRCALPHA)
+        shape_surf.set_alpha(128)
+        pygame.draw.rect(shape_surf,self.color,shape_surf.get_rect())
+        self.screen.blit(shape_surf,self.bbox)
         self.draw_pins()
         self.draw_results()

@@ -18,7 +18,7 @@ def run():
     
     game_screen = GameScreen(settings,screen)
 
-    while True:        
+    while game_screen.retry == False:
         clockobject = pygame.time.Clock()
         clockobject.tick(60)
         
@@ -34,9 +34,12 @@ def run():
         elif start_menu.active:
             start_menu.update(menu_dict, game_screen)
         else:
-            game_screen.update()
+            game_screen.update(menu_dict)
         
         gf.check_events(settings, screen, menu_dict, game_screen)
         gf.update_screen(settings, screen, menu_dict, game_screen)
+    
+    if game_screen.retry == "yes":
+        run()
             
 run()
