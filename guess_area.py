@@ -1,7 +1,8 @@
-
-import pygments
-from button import Button
 import pygame
+
+from button import Button
+from elements import Pin
+
 
 class Guessbox():
     def __init__(self, settings, screen, game_board) -> None:
@@ -10,32 +11,42 @@ class Guessbox():
         self.game_board = game_board
         
         self.color = settings.guess_box_color
-        self.width = settings.screen_width * 0.9
+        self.width = settings.screen_width * 0.635
         self.height = settings.guess_box_height
-        self.rect = (self.width, self.height)
-        
-        self.rect = pygame.Rect((0,0),self.rect)
-        self.rect.midbottom = (settings.screen_width / 2, game_board.rect.midbottom[1])
+        self.size = (self.width, self.height)
         self.guess_pin_list = []
-        i=4
-        pos = self.rect.midleft
-        while i > 0:
-            pos = (pos[0] + (self.settings.guess_pin_radius * 2) + 5, self.rect.midleft[1])
-            new_pin = Guesspin(screen,settings,pos)
-            self.guess_pin_list.append(new_pin)
-            i-=1
         
         #Create the area and color pins to select from
+        self.create_box()
         pos = self.rect.topright
         self.color_pins_area = Guesscolorpinarea(screen,settings, pos)
-        
-        pos = self.color_pins_area.bbox.bottomleft
-        self.confirm_box = Button(screen,settings,"Confirm", pos, "gb")
-        self.confirm_box.rect.bottomright = pos
-        self.confirm_box.prep_msg("Confirm")
+        self.create_buttons()
+        self.create_pins()
     
     def update(self):
         pass
+    
+    def create_box(self):
+        self.rect = pygame.Rect((0,0),self.size)
+        self.rect.midbottom = (self.settings.screen_width / 2, self.settings.screen_height)
+        self.rect.left = 40
+    
+    def create_pins(self):
+        i=4
+        pos = self.rect.midleft  # type: ignore
+        while i > 0:
+            pos = (pos[0] + self.settings.big_pin_radius + 35, self.rect.midleft[1]) # type: ignore
+            new_pin = Pin(self.settings,self.screen,pos,self.settings.guess_pin_color_inactive,self.settings.big_pin_radius)
+            self.guess_pin_list.append(new_pin)
+            i-=1
+    
+    def create_buttons(self):       
+        #Create a button to push the selection
+        pos = self.color_pins_area.bbox.bottomleft
+        pos = pos[0] - 30, pos[1] - 30
+        self.confirm_box = Button(self.screen,self.settings,"Confirm", pos, "gb")
+        self.confirm_box.rect.bottomright = pos
+        self.confirm_box.prep_msg("Confirm")
     
     def confirm_selection(self,button, push = False):
         filled = 0
@@ -57,7 +68,7 @@ class Guessbox():
                 break
         if push:
             self.push_guess()
-            
+
     def push_guess(self):
         guess_dict = {
             "colors" : self.color_list,
@@ -65,83 +76,52 @@ class Guessbox():
         self.game_board.guess_list.append(guess_dict)
         self.game_board.new_guess = True
 
-        
-        
+    def create_fake_guess(self):
+            color_list = (self.settings.colors["red"],self.settings.colors["red"],self.settings.colors["red"],self.settings.colors["red"])
+            guess_dict = {
+                "colors" : color_list,
+            }
+            self.game_board.guess_list.append(guess_dict)
+            self.game_board.new_guess = True
+    
     def blitme(self):
-        #pygame.draw.rect(self.screen, self.color, self.rect, width=5, border_radius=2)
-        self.confirm_box.draw_button()
-
-class Guesspin():
-    def __init__(self, screen, settings, pos) -> None:
-        self.screen = screen
-        self.settings = settings
-        
-        self.color = settings.guess_pin_color_inactive
-        self.pos = pos
-        self.radius = settings.guess_pin_radius
-        self.outline = settings.guess_pin_outline
-        
-        self.rect = pygame.draw.circle(self.screen, self.color, self.pos, self.radius, width=self.outline)
-        
-    def blitme(self):
-        pygame.draw.circle(self.screen, self.color, self.pos, self.radius, width=self.outline)
+        pygame.draw.rect(self.screen, self.color, self.rect, border_radius=2)
+        pygame.draw.rect(self.screen, self.settings.hud_colors['white'], self.rect, border_radius=2,width = 4)
+        self.confirm_box.blitme()
 
 class Guesscolorpinarea():
     def __init__(self,screen,settings, pos):
-        self.screen = screen
+        self.screen, self.settings = screen, settings
         self.settings = settings
-        self.radius = settings.guess_pin_radius / 1.7
-        
+        self.radius = settings.medium_pin_radius
+
         #Create an invisible box to put the pins in
         bbox_rect = (settings.guess_box_width / 3.5 , settings.guess_box_height - 10)
         self.bbox = pygame.Rect(pos, bbox_rect)
         self.bbox.topright = (pos[0] - 5, pos[1] + 5)
-        
+
         #Get the coordinates of the pins
         self.pin_pos_list = []
-        for x in range(self.bbox.left, self.bbox.right, int(self.radius * 2) + 5):
-            x += self.radius + 2
-            for y in range(self.bbox.top, self.bbox.bottom, int(self.radius * 2 + 5)):
-                y += self.radius + 2
+        for x in range(self.bbox.left + self.radius, self.bbox.right, int(self.radius + 10)):
+            for y in range(self.bbox.top +int(self.radius/1.5), self.bbox.bottom, int(self.radius + 10)):
                 if len(self.pin_pos_list) < 6:
                     self.pin_pos_list.append((x,y))
-        
+
+        #Create the pins
         self.pin_list = []
         i = 1
         pin_colour = None
-        for pin in self.pin_pos_list:
+        for pin_pos in self.pin_pos_list:
             for index, colour in enumerate(self.settings.colors, start=1):
                 if index == i:
                     pin_colour = self.settings.colors[colour]
                     break
             i+=1
-            new_pin = Guesspincolor(settings,screen,pin, pin_colour)
+            new_pin = Pin(settings,screen,pin_pos, pin_colour,self.radius,True)
             self.pin_list.append(new_pin)
-        
-        
-        
+
     def blitme(self):
         #DEBUG uncomment to see the box the colors are in
-        #pygame.draw.rect(self.screen,(30,30,30),self.bbox)
+        #pygame.draw.rect(self.screen,(250,30,30),self.bbox)
         for pin in self.pin_list:
             pin.blitme()
-        pass
-            
-        
-
-class Guesspincolor():
-    def __init__(self, settings, screen, pos, color) -> None:
-        self.screen = screen
-        self.settings = settings
-        self.radius = settings.guess_pin_radius / 1.7
-        self.pos = pos
-        self.color = color
-        
-        self.rect = pygame.draw.circle(self.screen, self.color, self.pos,self.radius)
-        
-    def blitme(self):
-        x, y = pygame.mouse.get_pos()
-        if self.rect.collidepoint(x,y):
-            pygame.draw.circle(self.screen,self.color,self.rect.center,self.radius + 2)
-        else: pygame.draw.circle(self.screen, self.color, self.rect.center,self.radius)
-        

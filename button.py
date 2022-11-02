@@ -8,31 +8,32 @@ class Button():
         self.settings = settings
         self.pos = pos
         self.msg = msg
+        self.border = 0
+        
+        self.button_color = settings.button_color
+        self.text_color = settings.text_color
+        self.font_type = settings.font_type
+        self.font_size = settings.font_size
         
         if id == "mm" or id == "gs":
             self.width, self.height = settings.mm_button_width, settings.mm_button_height
-            self.button_color = settings.mm_button_color
-            self.text_color = settings.mm_text_color
-            self.font_type = settings.mm_font_type
-            self.font_size = settings.mm_font_size
+
         elif id == "om":
             self.width, self.height = settings.om_button_width, settings.om_button_height
-            self.button_color = settings.om_button_color
-            self.text_color = settings.om_text_color
-            self.font_type = settings.om_font_type
-            self.font_size = settings.om_font_size
+
         elif id == "sm":
             self.width, self.height = settings.sm_button_width, settings.sm_button_height
-            self.button_color = settings.sm_button_color
-            self.text_color = settings.sm_text_color
-            self.font_type = settings.sm_font_type
-            self.font_size = settings.sm_font_size
+
         elif id == "gb":
             self.width, self.height = settings.gb_button_width, settings.gb_button_height
-            self.button_color = settings.gb_button_color
-            self.text_color = settings.gb_text_color
             self.font_type = settings.gb_font_type
             self.font_size = settings.gb_font_size
+            self.border = 2
+        elif id == "gb_2":
+            self.width, self.height = settings.gb_button_width, settings.gb_button_height
+            self.font_type = settings.gb_font_type
+            self.font_size = settings.gb_font_size
+            self.border = 0
         
         
         self.font = pygame.font.SysFont(self.font_type, self.font_size)
@@ -47,11 +48,11 @@ class Button():
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
     
-    def draw_button(self):
+    def blitme(self):
         x,y = pygame.mouse.get_pos()
         if self.rect.collidepoint(x,y):
-            self.button_color = self.settings.gb_button_color_hover
+            self.button_color = self.settings.button_color_hover
         else:
-            self.button_color = self.settings.gb_button_color
-        self.screen.fill(self.button_color, self.rect)
+            self.button_color = self.settings.button_color
+        pygame.draw.rect(self.screen,self.button_color,self.rect, border_radius=self.border)
         self.screen.blit(self.msg_image, self.msg_image_rect)

@@ -6,14 +6,12 @@ from slider import Slider
 class Main_menu():
     #The main men
     def __init__(self, settings, screen) -> None:
-        self.screen = screen
-        self.settings = settings
-        
+        self.screen, self.settings = screen,settings
         self.active = True
         
         self.button_height = settings.mm_button_height
         #these are the options to select from
-        button_text = ["Start", "Options", "Quit"]
+        button_text = ["Start", "Quit"]
         self.create_buttons(button_text)
     
     def create_buttons(self, button_text):
@@ -33,18 +31,17 @@ class Main_menu():
         
     def update_buttons(self):
         x,y  = pygame.mouse.get_pos()
-        mouse_pos = (x,y)
         for button in self.button_list:
             if button.rect.collidepoint(x,y):
-                button.button_color = self.settings.mm_button_color_hover
+                button.button_color = self.settings.button_color_hover
             else:
-                button.button_color = self.settings.mm_button_color
+                button.button_color = self.settings.button_color
     
     def blitme(self):
         for button in self.button_list:
-            button.draw_button()
+            button.blitme()
             
-    def clicky_wicky_uwu(self, clicked_button):
+    def click(self, clicked_button):
         if clicked_button.msg == "Start":
             self.active = False
             self.start_menu.active = True
@@ -62,9 +59,7 @@ class Options():
     def __init__(self, settings, screen) -> None:
         self.button_width = settings.om_button_width
         self.button_height = settings.om_button_height
-        self.screen = screen
-        self.settings = settings
-        
+        self.screen, self.settings = screen, settings
         self.active = False
         
         button_text = ["Back"]
@@ -97,31 +92,24 @@ class Options():
         x,y  = pygame.mouse.get_pos()
         for button in self.button_list:
             if button.rect.collidepoint(x,y):
-                button.button_color = self.settings.om_button_color_hover
+                button.button_color = self.settings.button_color_hover
             else:
-                button.button_color = self.settings.om_button_color
+                button.button_color = self.settings.button_color
     
     def update_sliders(self):
-        x,y = pygame.mouse.get_pos()
         for slider in self.slider_list:
-            #If mouse is on the slider do:
-            if slider.box_rect.collidepoint(x,y):
-                pass
-                #print("On slider box")
-                
             percent_max = slider.box_rect.width
             percentage = 100 * (slider.circle_pos[0] - slider.box_rect.left) / percent_max
             slider.calculations(int(percentage))
-
     
     def blitme(self):
         for button in self.button_list:
-            button.draw_button()
+            button.blitme()
         
         for slider in self.slider_list:
             slider.blitme()
             
-    def clicky_wicky_uwu(self, clicked_button):
+    def click(self, clicked_button):
         if clicked_button.msg == "Back":
             self.active = False
             self.main_menu.active = True
@@ -138,7 +126,7 @@ class Options():
         
         self.settings.rect = new_resolution
         self.settings.bg = pygame.transform.scale(self.settings.bg, new_resolution)
-            
+
 """
 
 START MENU STUFF
@@ -148,11 +136,8 @@ START MENU STUFF
 
 class Start_menu():
     def __init__(self, settings, screen) -> None:
-        self.button_width = settings.sm_button_width
-        self.button_height = settings.sm_button_height
-        self.screen = screen
-        self.settings = settings
-        
+        self.button_width, self.button_height = settings.sm_button_width, settings.sm_button_height
+        self.screen, self.settings = screen, settings
         self.active = False
         
         button_text = ["Back", "Start Game", "Hard", "Normal"]
@@ -175,31 +160,27 @@ class Start_menu():
         self.slider_list = []
         
         #Time slider
-        min = self.settings.min_time
-        default = self.settings.default_time
-        max = self.settings.max_time
+        min, default, max = self.settings.min_time, self.settings.default_time, self.settings.max_time
         mylist = (min,default,max)
         pos = (self.settings.screen_width - 330,100)
         new_slider = Slider(self.settings,self.screen,pos,mylist, is_time=True)
         self.slider_list.append(new_slider)
-        
+
         #max guess slider
-        min = 1
-        default = 16
-        max = 32
+        min, default, max = self.settings.min_guesses, self.settings.default_guesses, self.settings.max_guesses
         mylist= (min,default,max)
         pos =(self.settings.screen_width - 330, 200)
         new_slider = Slider(self.settings, self.screen,pos,mylist, is_int = True)
         self.slider_list.append(new_slider)
-        
+
     def create_text_box(self):
         pos = (50,50)
-        size = (400,500)
+        size = (700,900)
         self.text_box = pygame.rect.Rect(pos,size)
         with open('tutorial.txt', 'r') as f:
             msg_list = f.readlines()
-        
-        self.font = pygame.font.SysFont(self.settings.sm_font_type, 35)
+
+        self.font = pygame.font.SysFont(self.settings.chalk_font_type, self.settings.chalk_font_size)
         self.text_rect_list = []
         for msg in msg_list:
             msg = msg.splitlines()
@@ -217,15 +198,16 @@ class Start_menu():
         self.game_screen = game_screen
         self.update_buttons()
         self.update_sliders()
-    
+
     def update_buttons(self):
         x,y  = pygame.mouse.get_pos()
         for button in self.button_list:
             if button.rect.collidepoint(x,y):
-                button.button_color = self.settings.sm_button_color_hover
+                button.button_color = self.settings.button_color_hover
             else:
-                button.button_color = self.settings.sm_button_color
+                button.button_color = self.settings.button_color
 
+        #Move the button off/on-screen when needed
         if self.settings.difficulty == 2:
             for button in self.button_list:
                 if button.msg == "Normal":
@@ -240,36 +222,32 @@ class Start_menu():
                     button.rect.center = [ (self.settings.screen_width -30) - (self.button_width /2) , 280]
 
     def update_sliders(self):
-        x,y = pygame.mouse.get_pos()
         for slider in self.slider_list:
-            #If mouse is on the slider do:
-            if slider.box_rect.collidepoint(x,y):
-                pass
-                #print("On slider box")
-                
             percent_max = slider.box_rect.width
             percentage = 100 * (slider.circle_pos[0] - slider.box_rect.left) / percent_max
+            
             slider.percentage = percentage
             slider.calculations(int(percentage))
             if slider.is_int == True:
                 self.settings.max_guesses = int(slider.msg)
-    
-    
+
+
     def blitme(self):
         #pygame.draw.rect(self.screen,(0,0,0),self.text_box,width=2)
         for msg in self.text_rect_list:
             self.screen.blit(msg[0],msg[1])
         for button in self.button_list:
+            #Dont draw the normal/hard buttons when not needed
             if self.settings.difficulty == 2 and button.msg == "Normal":
                 continue
             elif self.settings.difficulty == 1 and button.msg == "Hard":
                 continue
             else:
-                button.draw_button()
+                button.blitme()
         for slider in self.slider_list:
             slider.blitme()
-    
-    def clicky_wicky_uwu(self, clicked_button):
+
+    def click(self, clicked_button):
         if clicked_button.msg == "Back":
             self.active = False
             self.main_menu.active = True
@@ -279,7 +257,7 @@ class Start_menu():
             self.game_screen.create_timer(self.slider_list[0].new_ticks)
             self.game_screen.game_board.create_secret_code()
             self.game_screen.game_board.secret_code = self.game_screen.game_board.code.pin_list
-            
+
         elif clicked_button.msg == "Normal":
             self.settings.difficulty = 2
         elif clicked_button.msg == "Hard":

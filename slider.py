@@ -52,17 +52,17 @@ class Slider():
     
     def calculations(self, new_percent):
         min, default, max = self.sliderlist
-        default_percentage = default / (max - min)
+        default_percentage = (default - min) / (max - min)
         self.percentage = default_percentage
         
         if new_percent: self.percentage = new_percent
         if self.is_time:
-            self.new_ticks = int(max *(self.percentage/100))
-            minutes, seconds, milliseconds = gf.convert_ticks_to_time(self.new_ticks)
+            self.new_ticks = int(max *(self.percentage/100) + min)
+            minutes, seconds= gf.convert_ticks_to_time(self.new_ticks)
             msg = str("%s:%s" % (minutes, seconds))
             pass
         elif self.is_int:
-            msg = int(max *(self.percentage/100))
+            msg = int(max *(self.percentage/100) + min)
         else:
             msg = new_percent
             self.new_ticks = None

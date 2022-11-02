@@ -11,6 +11,7 @@ def run():
     
     screen=pygame.display.set_mode((settings.screen_width, settings.screen_height), vsync= 1)
     pygame.display.set_caption("PythonMind")
+    pygame.display.set_icon(settings.icon)
     
     main_menu = Main_menu(settings, screen)
     option_menu = Options(settings, screen)
