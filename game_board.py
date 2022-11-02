@@ -34,6 +34,7 @@ class Gameboard():
             if len(self.total_guesses) > 6:
                 self.starting_index += 1
                 self.ending_index += 1
+                self.update_side_bar()
             
             
         self.code.update(self.won)
@@ -42,6 +43,7 @@ class Gameboard():
         for guess in self.total_guesses:
             if guess.won == True:
                 self.won = True
+        
         
         
             
@@ -73,12 +75,14 @@ class Gameboard():
                 self.ending_index += 1
                 for guess in self.total_guesses:
                     guess.update(reverse=False)
+                self.side_bar_slide_rect.bottom = self.side_bar_slide_rect.top
         elif button.msg == "v":
             if self.starting_index > 0:
                 self.starting_index -= 1
                 self.ending_index -= 1
                 for guess in self.total_guesses:
                     guess.update(reverse=True)
+                self.side_bar_slide_rect.top = self.side_bar_slide_rect.bottom
         else:
             print('smth went wrong with the side bar buttons')
         
@@ -88,6 +92,13 @@ class Gameboard():
         size = 30,self.button_list[1].rect.top - self.button_list[0].rect.bottom
         self.side_bar_rect = pygame.Rect(pos,size)
         self.side_bar_rect.topright = pos
+        
+    def update_side_bar(self):
+        if len(self.total_guesses) > 6:
+            self.side_bar_slide_rect = pygame.Rect(self.side_bar_rect.topleft,self.side_bar_rect.size)
+            
+            x = len(self.total_guesses) - 5
+            self.side_bar_slide_rect.height = int(self.side_bar_rect.height / x)
 
 
     def fill_empty_guesses(self):
@@ -126,6 +137,8 @@ class Gameboard():
         pygame.draw.rect(self.screen,self.settings.hud_colors["black"], self.rect)
         pygame.draw.rect(self.screen,self.color,self.rect, 5)
         pygame.draw.rect(self.screen,self.settings.hud_colors['dark_grey'],self.side_bar_rect)
+        if len(self.total_guesses) > 6:
+            pygame.draw.rect(self.screen,self.settings.hud_colors['grey'],self.side_bar_slide_rect)
         self.code.blitme()
 
 
