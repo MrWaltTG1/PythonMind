@@ -2,6 +2,7 @@ import sys
 import pygame
 from button import Button
 from slider import Slider
+import game_functions as gf
 
 class Main_menu():
     #The main men
@@ -13,6 +14,7 @@ class Main_menu():
         #these are the options to select from
         button_text = ["Start", "Quit"]
         self.create_buttons(button_text)
+        self.create_text()
     
     def create_buttons(self, button_text):
         #Create a button for every option given
@@ -22,6 +24,12 @@ class Main_menu():
             new_button = Button(self.screen, self.settings, button_message, self.button_pos, "mm")
             self.button_list.append(new_button)
             self.button_pos[1] += self.button_height * 2
+    
+    def create_text(self):
+        pos = self.settings.rect.centerx, self.settings.rect.centery - 300
+        text = "PythonMind"
+        size = 500,200
+        self.textbox_list1 = gf.create_text_box(self.settings,pos,size,text,font_size = 100,text_color=self.settings.hud_colors["white"])
     
     def update(self, menu_dict):
         self.option_menu = menu_dict["option_menu"]
@@ -40,6 +48,7 @@ class Main_menu():
     def blitme(self):
         for button in self.button_list:
             button.blitme()
+        self.screen.blit(self.textbox_list1[1][0],self.textbox_list1[1][1])
             
     def click(self, clicked_button):
         if clicked_button.msg == "Start":
@@ -147,12 +156,18 @@ class Start_menu():
     
     def create_buttons(self, button_text):
         self.button_list = []
-        
+        self.diff_button_center = 340
         for button_message in button_text:
             if button_message == "Back": self.button_pos = [(self.button_width /2) + 20 , self.settings.screen_height - 35]
             elif button_message == "Start Game": self.button_pos = [ (self.settings.screen_width -20) - (self.button_width /2) , self.settings.screen_height - 35]
-            elif button_message == "Hard" or "Normal" : self.button_pos = [ (self.settings.screen_width -30) - (self.button_width /2) , 280]
+            elif button_message == "Hard" or button_message == "Normal" :
+                self.button_pos = [ (self.settings.screen_width -30) - (self.button_width /2) , self.diff_button_center]
             new_button = Button(self.screen, self.settings, button_message, self.button_pos, "sm")
+            if new_button.msg == "Hard" or new_button.msg == "Normal" :
+                text = "Difficulty"
+                new_button.create_text_box(text)
+            else:
+                text = ""
             self.button_list.append(new_button)
             self.button_pos[1] -= self.button_height * 2
     
@@ -164,6 +179,7 @@ class Start_menu():
         mylist = (min,default,max)
         pos = (self.settings.screen_width - 330,100)
         new_slider = Slider(self.settings,self.screen,pos,mylist, is_time=True)
+        new_slider.create_text_box("Set the time")
         self.slider_list.append(new_slider)
 
         #max guess slider
@@ -171,6 +187,7 @@ class Start_menu():
         mylist= (min,default,max)
         pos =(self.settings.screen_width - 330, 200)
         new_slider = Slider(self.settings, self.screen,pos,mylist, is_int = True)
+        new_slider.create_text_box("Set the maximum guesses")
         self.slider_list.append(new_slider)
 
     def create_text_box(self):
@@ -213,13 +230,13 @@ class Start_menu():
                 if button.msg == "Normal":
                     button.rect.center = (-100,-100)
                 elif button.msg == "Hard":
-                    button.rect.center = [ (self.settings.screen_width -30) - (self.button_width /2) , 280]
+                    button.rect.center = [ (self.settings.screen_width -30) - (self.button_width /2) , self.diff_button_center]
         elif self.settings.difficulty == 1:
             for button in self.button_list:
                 if button.msg == "Hard":
                     button.rect.center = (-100,-100)
                 elif button.msg == "Normal":
-                    button.rect.center = [ (self.settings.screen_width -30) - (self.button_width /2) , 280]
+                    button.rect.center = [ (self.settings.screen_width -30) - (self.button_width /2) , self.diff_button_center]
 
     def update_sliders(self):
         for slider in self.slider_list:

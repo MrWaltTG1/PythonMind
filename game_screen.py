@@ -16,7 +16,7 @@ class GameScreen():
         self.create_button()
         
         #Debug add in x amount of fake guesses
-        self.fake_guesses = 6
+        self.fake_guesses = 7
         #Debug var
         self.x = 0
 
@@ -86,19 +86,45 @@ class GameScreen():
         try:
             if self.winscreen.retry_button.rect.collidepoint(x,y):
                 self.retry = "yes"
+
         except:
             pass
         try:
             if self.losescreen.retry_button.rect.collidepoint(x,y):
                 self.retry = "yes"
+
         except:
             pass
         
         if self.back_button.rect.collidepoint(x,y):
+            self.confirm_popup()
+            self.confirm = True
+        if self.confirm_button.rect.collidepoint(x,y):
+            self.confirm = False
             self.active = False
             self.menu_dict["start_menu"].active = True
             self.game_board.total_guesses = []
+            self.game_board.guess_list = []
+            self.game_board.index, self.game_board.starting_index, self.game_board.ending_index = 0,0,6
+        if self.cancel_button.rect.collidepoint(x,y):
+            self.confirm = False
 
+    def confirm_popup(self):
+        self.dark_surf = gf.get_surf_darken_screen(self.screen,self.settings)
+        pos1 = self.settings.rect.centerx, self.settings.rect.centery - 40
+        pos2 = self.settings.rect.centerx, self.settings.rect.centery + 40
+        pos3 = self.settings.rect.centerx, self.settings.rect.centery - 180
+        self.confirm_button = Button(self.screen,self.settings,"Confirm",pos1,"mm")
+        self.cancel_button = Button(self.screen, self.settings,"Cancel", pos2, "mm")
+        
+        size = (400,60)
+        text = "Are you sure?"
+        textbox_list = gf.create_text_box(self.settings,pos3,size,text)
+        self.textbox = textbox_list[0]
+        self.image = textbox_list[1][0]
+        self.image_rect = textbox_list[1][1]
+        pass
+        
 
 class Winscreen():
     def __init__(self, screen,settings) -> None:
@@ -116,7 +142,7 @@ class Losescreen():
     def __init__(self, screen,settings) -> None:
         self.screen, self.settings = screen, settings
         self.darken_surf = gf.get_surf_darken_screen(screen, settings)
-        
+    
         center_pos = (self.settings.screen_width/2,self.settings.screen_height/2)
         self.retry_button = Button(self.screen,self.settings,"Retry",center_pos,"gs")
     

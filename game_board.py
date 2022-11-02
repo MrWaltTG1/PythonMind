@@ -26,16 +26,13 @@ class Gameboard():
 
     def update(self):
         if self.new_guess:
-            for guess in self.total_guesses:
-                guess.update()
+            
             self.create_guess()
             self.new_guess = False
             
             if len(self.total_guesses) > 6:
-                self.starting_index += 1
-                self.ending_index += 1
                 self.update_side_bar()
-            
+                self.click(self.button_list[1])
             
         self.code.update(self.won)
 
@@ -70,19 +67,22 @@ class Gameboard():
     
     def click(self,button):
         if button.msg == "^":
-            if self.ending_index < self.settings.max_guesses and self.starting_index < (len(self.total_guesses) - 6):
-                self.starting_index += 1
-                self.ending_index += 1
-                for guess in self.total_guesses:
-                    guess.update(reverse=False)
-                self.side_bar_slide_rect.bottom = self.side_bar_slide_rect.top
-        elif button.msg == "v":
             if self.starting_index > 0:
                 self.starting_index -= 1
                 self.ending_index -= 1
                 for guess in self.total_guesses:
+                    guess.update(reverse=False)
+                self.side_bar_slide_rect.bottom = self.side_bar_slide_rect.top
+        elif button.msg == "v":
+            if self.starting_index < self.settings.max_guesses and self.starting_index < len(self.total_guesses) - 6:
+                self.starting_index += 1
+                self.ending_index += 1
+                for guess in self.total_guesses:
                     guess.update(reverse=True)
                 self.side_bar_slide_rect.top = self.side_bar_slide_rect.bottom
+                if self.ending_index == len(self.total_guesses):
+                    self.side_bar_slide_rect.bottom = self.side_bar_rect.bottom
+                    
         else:
             print('smth went wrong with the side bar buttons')
         
@@ -92,13 +92,13 @@ class Gameboard():
         size = 30,self.button_list[1].rect.top - self.button_list[0].rect.bottom
         self.side_bar_rect = pygame.Rect(pos,size)
         self.side_bar_rect.topright = pos
+        self.side_bar_slide_rect = pygame.Rect(self.side_bar_rect.topleft,self.side_bar_rect.size)
         
     def update_side_bar(self):
         if len(self.total_guesses) > 6:
-            self.side_bar_slide_rect = pygame.Rect(self.side_bar_rect.topleft,self.side_bar_rect.size)
-            
             x = len(self.total_guesses) - 5
             self.side_bar_slide_rect.height = int(self.side_bar_rect.height / x)
+    
 
 
     def fill_empty_guesses(self):
@@ -120,7 +120,13 @@ class Gameboard():
     def create_guess(self):
         if self.guess_list:
             if len(self.guess_list) > 0:
-                self.guess_list[self.index]["pos"] = self.rect.midtop[0], self.rect.midtop[1] + 10
+                try:
+                    pos = self.total_guesses[-1].bbox.centerx, self.total_guesses[-1].bbox.bottom + 8
+                except:
+                    pos = self.rect.midtop[0], self.rect.midtop[1] + 10
+                    print("whoops")
+                
+                self.guess_list[self.index]["pos"] = pos
                 add_guess = Guess(self.settings,self.screen,self.guess_list[self.index]["pos"],self.guess_list[self.index]["colors"],len(self.guess_list))
                 #add_guess.bbox.midtop = self.rect.midtop
                 add_guess.create_pins()

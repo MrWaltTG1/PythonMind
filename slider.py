@@ -49,6 +49,7 @@ class Slider():
         self.msg_image_rect = self.msg_image.get_rect()
         #place the message in the middle above the slider
         self.msg_image_rect.midbottom = self.box_rect.midtop
+        
     
     def calculations(self, new_percent):
         min, default, max = self.sliderlist
@@ -69,8 +70,19 @@ class Slider():
         
         self.prep_msg(msg)
 
+    def create_text_box(self, text):
+        size = (200,40)
+        pos = self.pos[0] + self.box_rect.width / 2,self.pos[1] - 50
+        self.textbox_list = gf.create_text_box(self.settings,pos,size,text,font_size=30,text_color=self.settings.hud_colors["white"])
 
     def blitme(self):
         pygame.draw.rect(self.screen, self.box_color, self.box_rect,border_radius= 2)
         pygame.draw.circle(self.screen,self.circle_color,self.circle_pos, radius=5)
         self.screen.blit(self.msg_image, self.msg_image_rect)
+        
+        try:
+            if self.textbox_list:
+                pygame.draw.rect(self.screen,self.box_color,self.textbox_list[0], width= -1)
+                self.screen.blit(self.textbox_list[1][0],self.textbox_list[1][1])
+        except:
+            pass

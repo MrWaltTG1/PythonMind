@@ -1,4 +1,5 @@
 import pygame
+import game_functions as gf
 
 class Button():
     
@@ -47,6 +48,11 @@ class Button():
         self.msg_image = self.font.render(msg, True, self.text_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
+        
+    def create_text_box(self, text):
+        size = (200,40)
+        pos = self.pos[0],self.pos[1] - 50
+        self.textbox_list = gf.create_text_box(self.settings,pos,size,text,font_size=30,text_color=self.settings.hud_colors["white"])
     
     def blitme(self):
         x,y = pygame.mouse.get_pos()
@@ -56,3 +62,9 @@ class Button():
             self.button_color = self.settings.button_color
         pygame.draw.rect(self.screen,self.button_color,self.rect, border_radius=self.border)
         self.screen.blit(self.msg_image, self.msg_image_rect)
+        try:
+            if self.textbox_list:
+                pygame.draw.rect(self.screen,self.button_color,self.textbox_list[0], width = -1)
+                self.screen.blit(self.textbox_list[1][0],self.textbox_list[1][1])
+        except:
+            pass

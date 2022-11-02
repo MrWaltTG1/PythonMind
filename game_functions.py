@@ -28,6 +28,17 @@ def update_screen(settings, screen, menu_dict, game_screen):
         for pin in game_screen.guess_box.guess_pin_list:
             pin.blitme()
         game_screen.guess_box.color_pins_area.blitme()
+        
+        try:
+            if game_screen.confirm == True:
+                screen.blit(game_screen.dark_surf, settings.rect)
+                game_screen.confirm_button.blitme()
+                game_screen.cancel_button.blitme()
+                pygame.draw.rect(screen,settings.hud_colors["white"],game_screen.textbox)
+                screen.blit(game_screen.image,game_screen.image_rect)
+
+        except:
+            print("whoops")
 
         #Draw win condition
         try:
@@ -175,4 +186,16 @@ def get_surf_darken_screen(screen, settings):
     pygame.draw.rect(darken_surf,(0,0,0),settings.rect)
     return darken_surf
 
-"""ADD ANIMATONS"""
+def create_text_box(settings,pos,size,text,text_color = None, font_size = None):
+    textbox = pygame.Rect(pos,size)
+    textbox.center = pos
+    if not text_color:
+        text_color = settings.hud_colors["black"]
+    if not font_size:
+        font_size = settings.font_size
+    font = pygame.font.SysFont(None, font_size)  # type: ignore
+    msg_image = font.render(text, True, text_color)
+    msg_image_rect = msg_image.get_rect()
+    msg_image_rect.center = textbox.center
+    
+    return (textbox,(msg_image,msg_image_rect))
