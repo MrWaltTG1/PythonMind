@@ -58,7 +58,8 @@ class Settings():
             "green" : (0,255,0),
             "yellow" : (255,255,0),
             "orange" : (255,165,0),
-            "purple" : (153,50,204)
+            "purple" : (153,50,204),
+            "brown" : (150,75,0)
             }
         #PIN sizes
         self.small_pin_radius, self.medium_pin_radius, self.big_pin_radius = 20, 40, 60

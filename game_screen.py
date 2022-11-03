@@ -16,7 +16,7 @@ class GameScreen():
         self.create_button()
         
         #Debug add in x amount of fake guesses
-        self.fake_guesses = 7
+        self.fake_guesses = 0
         #Debug var
         self.x = 0
 
@@ -26,7 +26,7 @@ class GameScreen():
             self.game_board.update()
             self.menu_dict = menu_dict
 
-            if not self.won or not self.loss:
+            if self.won == False and self.loss == False:
                 self.update_timer()
 
             #check to see if the game has been won
@@ -75,7 +75,7 @@ class GameScreen():
 
     def do_win(self):
         self.win = True
-        self.winscreen = Winscreen(self.screen,self.settings)
+        self.winscreen = Winscreen(self.screen,self.settings, len(self.game_board.total_guesses))
         
     def do_lose(self):
         self.loss = True
@@ -96,18 +96,21 @@ class GameScreen():
         except:
             pass
         
-        if self.back_button.rect.collidepoint(x,y):
-            self.confirm_popup()
-            self.confirm = True
-        if self.confirm_button.rect.collidepoint(x,y):
-            self.confirm = False
-            self.active = False
-            self.menu_dict["start_menu"].active = True
-            self.game_board.total_guesses = []
-            self.game_board.guess_list = []
-            self.game_board.index, self.game_board.starting_index, self.game_board.ending_index = 0,0,6
-        if self.cancel_button.rect.collidepoint(x,y):
-            self.confirm = False
+        try:
+            if self.back_button.rect.collidepoint(x,y):
+                self.confirm_popup()
+                self.confirm = True
+            elif self.confirm_button.rect.collidepoint(x,y):
+                self.confirm = False
+                self.active = False
+                self.menu_dict["start_menu"].active = True
+                self.game_board.total_guesses = []
+                self.game_board.guess_list = []
+                self.game_board.index, self.game_board.starting_index, self.game_board.ending_index = 0,0,6
+            elif self.cancel_button.rect.collidepoint(x,y):
+                self.confirm = False
+        except:
+            print("the back button seems to not be working")
 
     def confirm_popup(self):
         self.dark_surf = gf.get_surf_darken_screen(self.screen,self.settings)
@@ -123,20 +126,30 @@ class GameScreen():
         self.textbox = textbox_list[0]
         self.image = textbox_list[1][0]
         self.image_rect = textbox_list[1][1]
-        pass
         
 
 class Winscreen():
-    def __init__(self, screen,settings) -> None:
+    def __init__(self, screen,settings, guesses) -> None:
         self.screen, self.settings = screen, settings
         self.darken_surf = gf.get_surf_darken_screen(screen, settings)
         
         center_pos = (self.settings.screen_width/2,self.settings.screen_height/2)
         self.retry_button = Button(self.screen,self.settings,"Retry",center_pos,"gs")
-    
+        
+        pos = (self.settings.rect.centerx, self.settings.rect.centery - 100)
+        size = (200,30)
+        text = f"your score is: {settings.max_guesses - guesses}"
+        self.textbox_list1 = gf.create_text_box(settings,pos,size,text,text_color = self.settings.hud_colors["white"], font_size = 50)
+
+        pos = (self.settings.rect.centerx, self.settings.rect.centery - 150)
+        text = "Congratulations, you've succesfully guessed the code!"
+        self.textbox_list2 = gf.create_text_box(settings,pos,size,text,text_color = self.settings.hud_colors["white"], font_size = 50)
+        
     def blitme(self):
         self.screen.blit(self.darken_surf, self.settings.rect)
         self.retry_button.blitme()
+        self.screen.blit(self.textbox_list1[1][0],self.textbox_list1[1][1])
+        self.screen.blit(self.textbox_list2[1][0],self.textbox_list2[1][1])
     
 class Losescreen():
     def __init__(self, screen,settings) -> None:
@@ -145,7 +158,13 @@ class Losescreen():
     
         center_pos = (self.settings.screen_width/2,self.settings.screen_height/2)
         self.retry_button = Button(self.screen,self.settings,"Retry",center_pos,"gs")
+        
+        pos = (self.settings.rect.centerx, self.settings.rect.centery - 150)
+        size = (200,30)
+        text = "You've failed to crack the code"
+        self.textbox_list1 = gf.create_text_box(settings,pos,size,text,text_color = self.settings.hud_colors["white"], font_size = 50)
     
     def blitme(self):
         self.screen.blit(self.darken_surf, self.settings.rect)
         self.retry_button.blitme()
+        self.screen.blit(self.textbox_list1[1][0],self.textbox_list1[1][1])

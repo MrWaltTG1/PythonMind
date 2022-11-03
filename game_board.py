@@ -2,6 +2,7 @@ import pygame
 from button import Button
 from elements import Pin
 from secret_code import SecretCode
+import game_functions as gf
 
 class Gameboard():
     def __init__(self, settings,screen) -> None:
@@ -22,6 +23,7 @@ class Gameboard():
         self.fill_empty_guesses()
         self.create_buttons()
         self.create_side_bar()
+        self.create_textboxes()
 
 
     def update(self):
@@ -29,11 +31,18 @@ class Gameboard():
             
             self.create_guess()
             self.new_guess = False
-            
+            #Update the side bar if theres more than 6 guesses
             if len(self.total_guesses) > 6:
                 self.update_side_bar()
                 self.click(self.button_list[1])
-            
+        
+        #Update the text telling how much guesses you have left
+        self.textbox_list_list.remove(self.text_max_guesses)
+        pos, size, text = (self.rect.right + 200, 270),(200,80), f"you have {self.settings.max_guesses - len(self.total_guesses)} guesses left"
+        self.text_max_guesses = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        self.textbox_list_list.append(self.text_max_guesses)
+        
+        
         self.code.update(self.won)
 
         #UPDATE the new guess positions
@@ -41,12 +50,10 @@ class Gameboard():
             if guess.won == True:
                 self.won = True
         
-        
-        
-            
 
     def create_buttons(self):
         self.button_list = []
+        #Create button to move up
         msg = '^' 
         size = 30,70
         pos = self.rect.right - 5, self.rect.top + 5
@@ -55,12 +62,12 @@ class Gameboard():
         up_button.rect.topright = pos
         up_button.msg_image_rect.center = up_button.rect.center
         
+        #Create button to move down
         msg = 'v'
         pos = self.rect.right - 5, self.rect.bottom - self.settings.guess_box_height + 8
         down_button = Button(self.screen,self.settings,msg,pos,'gb_2')
         down_button.rect.size = size
         down_button.rect.bottomright = pos
-        pygame.transform.rotate(down_button.msg_image, 180)
         down_button.msg_image_rect.center = down_button.rect.center
         
         self.button_list  = [up_button,down_button]
@@ -82,11 +89,9 @@ class Gameboard():
                 self.side_bar_slide_rect.top = self.side_bar_slide_rect.bottom
                 if self.ending_index == len(self.total_guesses):
                     self.side_bar_slide_rect.bottom = self.side_bar_rect.bottom
-                    
         else:
-            print('smth went wrong with the side bar buttons')
+            print('could not find the right button')
         
-    
     def create_side_bar(self):
         pos = self.button_list[0].rect.bottomright
         size = 30,self.button_list[1].rect.top - self.button_list[0].rect.bottom
@@ -95,6 +100,7 @@ class Gameboard():
         self.side_bar_slide_rect = pygame.Rect(self.side_bar_rect.topleft,self.side_bar_rect.size)
         
     def update_side_bar(self):
+        #Resize the light grey bar if a new guess is added
         if len(self.total_guesses) > 6:
             x = len(self.total_guesses) - 5
             self.side_bar_slide_rect.height = int(self.side_bar_rect.height / x)
@@ -102,6 +108,7 @@ class Gameboard():
 
 
     def fill_empty_guesses(self):
+        #Create the visuals on the board that the guesses get added into
         pos = self.rect.midtop[0], self.rect.midtop[1] + 10
         colors = []
         i=4
@@ -128,7 +135,6 @@ class Gameboard():
                 
                 self.guess_list[self.index]["pos"] = pos
                 add_guess = Guess(self.settings,self.screen,self.guess_list[self.index]["pos"],self.guess_list[self.index]["colors"],len(self.guess_list))
-                #add_guess.bbox.midtop = self.rect.midtop
                 add_guess.create_pins()
                 add_guess.get_results(self.secret_code)
                 add_guess.create_results()
@@ -138,6 +144,42 @@ class Gameboard():
     def create_secret_code(self):
         self.code = SecretCode(self.settings,self.screen)
 
+    def create_textboxes(self):
+        self.textbox_list_list= []
+        left = self.rect.right
+        #Results legend
+        pos, size, text = (left + 200, 150),(200,80), "Red means the right color is in the right place"
+        textbox_list1 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        pos, size, text = (left + 200, 180),(200,80), "White is the right color is in the wrong place"
+        textbox_list2 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        pos, size, text = (left + 200, 210),(200,80), "Empty means the color is wrong"
+        textbox_list3 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        self.textbox_list_list.append(textbox_list1)
+        self.textbox_list_list.append(textbox_list2)
+        self.textbox_list_list.append(textbox_list3)
+        
+        #Show amount of guesses left
+        pos, size, text = (left + 200, 370),(200,80), f"you have {self.settings.max_guesses - len(self.total_guesses)} guesses left"
+        self.text_max_guesses = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        self.textbox_list_list.append(self.text_max_guesses)
+        
+        
+        
+        #Actions text help
+        pos, size, text = (left + 200, 770),(200,80), "Drag the colored pins to the empty slots"
+        textbox_list1 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        pos, size, text = (left + 200, 800),(200,80), "You can also click the pins the fill the leftmost"
+        textbox_list2 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        pos, size, text = (left + 200, 830),(200,80), "empty slot"
+        textbox_list3 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        pos, size, text = (left + 200, 870),(200,80), "Once all slots are filled just press confirm!"
+        textbox_list4 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+
+        
+        self.textbox_list_list.append(textbox_list1)
+        self.textbox_list_list.append(textbox_list2)
+        self.textbox_list_list.append(textbox_list3)
+        self.textbox_list_list.append(textbox_list4)
 
     def blitme(self):
         pygame.draw.rect(self.screen,self.settings.hud_colors["black"], self.rect)
@@ -146,6 +188,8 @@ class Gameboard():
         if len(self.total_guesses) > 6:
             pygame.draw.rect(self.screen,self.settings.hud_colors['grey'],self.side_bar_slide_rect)
         self.code.blitme()
+        for text in self.textbox_list_list:
+            self.screen.blit(text[1][0],text[1][1])
 
 
 class Guess():
@@ -222,7 +266,7 @@ class Guess():
                 code_color_list.pop(i)
                 guess_color_list.pop(i)
             i-=1
-                
+
         #GET HALF ONES
         for code in code_color_list[:]:
             for guess in guess_color_list[:]:

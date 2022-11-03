@@ -38,6 +38,8 @@ class SecretCode():
         i=0
         while i < self.settings.code_length:
             random_color = random.choice(self.colorlist)
+            while random_color == self.settings.colors["brown"]:
+                random_color = random.choice(self.colorlist)
             if self.settings.difficulty == 1:
                 self.colorlist.remove(random_color)
             pin_pos = (pin_pos[0]+ 80, pin_pos[1])

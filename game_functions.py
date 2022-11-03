@@ -38,7 +38,7 @@ def update_screen(settings, screen, menu_dict, game_screen):
                 screen.blit(game_screen.image,game_screen.image_rect)
 
         except:
-            print("whoops")
+            pass
 
         #Draw win condition
         try:
@@ -182,7 +182,7 @@ def convert_ticks_to_time(ticks):
 
 def get_surf_darken_screen(screen, settings):
     darken_surf = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
-    darken_surf.set_alpha(100)
+    darken_surf.set_alpha(180)
     pygame.draw.rect(darken_surf,(0,0,0),settings.rect)
     return darken_surf
 

@@ -11,8 +11,8 @@
  After every guess, the Computer will inform you of your progress using
   different pins on the right side of your guess
 
- -A black circle means you have the right color on the right space
- -A grey circle means you have the right color on the wrong space
+ -A red circle means you have the right color on the right space
+ -A white circle means you have the right color on the wrong space
  -An empty circle means you're missing the right color
 
  Good luck!

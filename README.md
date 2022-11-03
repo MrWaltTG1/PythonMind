@@ -1,4 +1,5 @@
 # PythonMind
 PythonMind project
 
-yo whats hood
+I was instructed to start a project to make a Mastermind-like game for a fake commissioner
+

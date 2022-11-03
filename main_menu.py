@@ -26,14 +26,21 @@ class Main_menu():
             self.button_pos[1] += self.button_height * 2
     
     def create_text(self):
+        self.textbox_list_list = []
         pos = self.settings.rect.centerx, self.settings.rect.centery - 300
         text = "PythonMind"
         size = 500,200
         self.textbox_list1 = gf.create_text_box(self.settings,pos,size,text,font_size = 100,text_color=self.settings.hud_colors["white"])
-    
+        self.textbox_list_list.append(self.textbox_list1)
+        
+        pos = self.settings.rect.centerx, self.settings.rect.centery - 230
+        text = "The challenging game of Logic and Deduction"
+        self.textbox_list2 = gf.create_text_box(self.settings,pos,size,text,font_size = 50,text_color=self.settings.hud_colors["white"])
+        self.textbox_list_list.append(self.textbox_list2)
+        
     def update(self, menu_dict):
         self.option_menu = menu_dict["option_menu"]
-        self.start_menu = menu_dict["start_menu"]
+        self.start_menu  = menu_dict["start_menu"]
         
         self.update_buttons()
         
@@ -48,7 +55,9 @@ class Main_menu():
     def blitme(self):
         for button in self.button_list:
             button.blitme()
-        self.screen.blit(self.textbox_list1[1][0],self.textbox_list1[1][1])
+        for list in self.textbox_list_list:
+            self.screen.blit(list[1][0],list[1][1])
+
             
     def click(self, clicked_button):
         if clicked_button.msg == "Start":
