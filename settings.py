@@ -10,7 +10,6 @@ class Settings():
         
         self.icon = pygame.image.load("images/brain_icon.bmp")
         
-        
         #HUD COLOR LIST
         self.hud_colors = {
             'white' : (242,242,242),
@@ -27,7 +26,6 @@ class Settings():
         self.button_color_hover = self.hud_colors['grey']
         self.text_color = self.hud_colors['black']
         self.font_type, self.font_size = None, 50
-        
         
         #Main Menu settings
         self.mm_button_width = 300
@@ -64,7 +62,7 @@ class Settings():
         #PIN sizes
         self.small_pin_radius, self.medium_pin_radius, self.big_pin_radius = 20, 40, 60
 
-        self.min_time, self.default_time, self.max_time = 0, 300000, 1800000
+        self.min_time, self.default_time, self.max_time = 0, 300000, 1200000
         self.min_guesses, self.default_guesses, self.max_guesses = 1,12,50
         self.difficulty = 1 #1 = normal, 2 = hard
         self.shine_image = pygame.image.load("images/shine.bmp")

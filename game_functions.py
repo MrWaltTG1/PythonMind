@@ -5,7 +5,7 @@ from elements import Pin
 
 
 def update_screen(settings, screen, menu_dict, game_screen):
-
+    """Draws the screen"""
     screen.blit(settings.bg, settings.rect)
 
     if menu_dict["main_menu"].active:
@@ -73,6 +73,7 @@ def check_events(settings, screen, menu_dict, game_screen):
 
 
 def check_mouse_down_events(event, settings,screen, menu_dict, game_screen):
+    """Method for watching mouse clicks"""
     #Function for mouse clicks
     #Get the x and y location of where has been clicked
     x, y = event.pos

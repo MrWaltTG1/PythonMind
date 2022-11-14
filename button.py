@@ -4,12 +4,9 @@ import game_functions as gf
 class Button():
     
     def __init__(self, screen, settings, msg, pos, id):
-        self.screen= screen
-        self.screen_rect = screen.get_rect()
-        self.settings = settings
-        self.pos = pos
-        self.msg = msg
+        self.screen, self.settings, self.pos, self.msg= screen, settings, pos, msg
         self.border = 0
+        self.textbox_list = None
         
         self.button_color = settings.button_color
         self.text_color = settings.text_color
@@ -38,7 +35,6 @@ class Button():
         
         
         self.font = pygame.font.SysFont(self.font_type, self.font_size)
-        
         self.rect = pygame.Rect(0,0, self.width, self.height)
         self.rect.center = pos
         
@@ -62,9 +58,7 @@ class Button():
             self.button_color = self.settings.button_color
         pygame.draw.rect(self.screen,self.button_color,self.rect, border_radius=self.border)
         self.screen.blit(self.msg_image, self.msg_image_rect)
-        try:
-            if self.textbox_list:
-                pygame.draw.rect(self.screen,self.button_color,self.textbox_list[0], width = -1)
-                self.screen.blit(self.textbox_list[1][0],self.textbox_list[1][1])
-        except:
-            pass
+
+        if self.textbox_list:
+            pygame.draw.rect(self.screen,self.button_color,self.textbox_list[0], width = -1)
+            self.screen.blit(self.textbox_list[1][0],self.textbox_list[1][1])

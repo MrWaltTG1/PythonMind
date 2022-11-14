@@ -1,11 +1,14 @@
 import sys
+
 import pygame
+
+import game_functions as gf
 from button import Button
 from slider import Slider
-import game_functions as gf
+
 
 class Main_menu():
-    #The main men
+    """The class containing the main menu"""
     def __init__(self, settings, screen) -> None:
         self.screen, self.settings = screen,settings
         self.active = True
@@ -17,7 +20,7 @@ class Main_menu():
         self.create_text()
     
     def create_buttons(self, button_text):
-        #Create a button for every option given
+        """Create a button for every string given"""
         self.button_list = []
         self.button_pos = [self.settings.screen_width / 2, 300]
         for button_message in button_text:
@@ -26,6 +29,7 @@ class Main_menu():
             self.button_pos[1] += self.button_height * 2
     
     def create_text(self):
+        """Adds various textboxes"""
         self.textbox_list_list = []
         pos = self.settings.rect.centerx, self.settings.rect.centery - 300
         text = "PythonMind"
@@ -34,9 +38,14 @@ class Main_menu():
         self.textbox_list_list.append(self.textbox_list1)
         
         pos = self.settings.rect.centerx, self.settings.rect.centery - 230
-        text = "The challenging game of Logic and Deduction"
+        text = "The challenging game of logic and deduction"
         self.textbox_list2 = gf.create_text_box(self.settings,pos,size,text,font_size = 50,text_color=self.settings.hud_colors["white"])
         self.textbox_list_list.append(self.textbox_list2)
+        
+        pos = self.settings.rect.centerx, self.settings.rect.centery + 230
+        text = "Can you crack the code?"
+        self.textbox_list3 = gf.create_text_box(self.settings,pos,size,text,font_size = 50,text_color=self.settings.hud_colors["white"])
+        self.textbox_list_list.append(self.textbox_list3)
         
     def update(self, menu_dict):
         self.option_menu = menu_dict["option_menu"]
@@ -45,6 +54,7 @@ class Main_menu():
         self.update_buttons()
         
     def update_buttons(self):
+        """Updates the colors of the buttons"""
         x,y  = pygame.mouse.get_pos()
         for button in self.button_list:
             if button.rect.collidepoint(x,y):
@@ -53,13 +63,15 @@ class Main_menu():
                 button.button_color = self.settings.button_color
     
     def blitme(self):
+        """draws the necessary things"""
         for button in self.button_list:
             button.blitme()
         for list in self.textbox_list_list:
             self.screen.blit(list[1][0],list[1][1])
 
-            
+
     def click(self, clicked_button):
+        """Does x when clicked on y button"""
         if clicked_button.msg == "Start":
             self.active = False
             self.start_menu.active = True
@@ -74,6 +86,7 @@ OPTION MENU STUFF
 """
 
 class Options():
+    """The class containing the options menu"""
     def __init__(self, settings, screen) -> None:
         self.button_width = settings.om_button_width
         self.button_height = settings.om_button_height
@@ -84,8 +97,8 @@ class Options():
         self.create_buttons(button_text)
         self.create_slider()
         
-    
-    def create_buttons(self, button_text):
+
+    def create_buttons(self, button_text: list) -> None:
         self.button_list = []
         self.button_pos = [(self.button_width /2) + 20 , self.settings.screen_height - 35]
         for button_message in button_text:
@@ -115,6 +128,7 @@ class Options():
                 button.button_color = self.settings.button_color
     
     def update_sliders(self):
+        """Update the value in the sliders"""
         for slider in self.slider_list:
             percent_max = slider.box_rect.width
             percentage = 100 * (slider.circle_pos[0] - slider.box_rect.left) / percent_max
@@ -153,6 +167,7 @@ START MENU STUFF
 """
 
 class Start_menu():
+    """The class containing the starting menu"""
     def __init__(self, settings, screen) -> None:
         self.button_width, self.button_height = settings.sm_button_width, settings.sm_button_height
         self.screen, self.settings = screen, settings

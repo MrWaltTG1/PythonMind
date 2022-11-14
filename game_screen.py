@@ -101,16 +101,14 @@ class GameScreen():
                 self.confirm_popup()
                 self.confirm = True
             elif self.confirm_button.rect.collidepoint(x,y):
-                self.confirm = False
-                self.active = False
+                self.confirm, self.active = False, False
                 self.menu_dict["start_menu"].active = True
-                self.game_board.total_guesses = []
-                self.game_board.guess_list = []
+                self.game_board.total_guesses, self.game_board.guess_list = [], []
                 self.game_board.index, self.game_board.starting_index, self.game_board.ending_index = 0,0,6
             elif self.cancel_button.rect.collidepoint(x,y):
                 self.confirm = False
         except:
-            print("the back button seems to not be working")
+            pass
 
     def confirm_popup(self):
         self.dark_surf = gf.get_surf_darken_screen(self.screen,self.settings)
