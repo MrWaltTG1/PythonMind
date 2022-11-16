@@ -1,7 +1,10 @@
 # PythonMind
-PythonMind project
+A program that simulates the board game 'MasterMind' against a computer opponent
 
-07/11/2022
-Als onderdeel van de REA college programmeer opleiding ben ik een project begonnen.
+# Libraries
+PyGame
 
-Het doel van het project is om het bordspel MasterMind digitaal na te maken.
+# How it looks
+<!-- add screenshots here -->
+
+The first screen
