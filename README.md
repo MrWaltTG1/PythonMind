@@ -1,7 +1,21 @@
 # PythonMind
 
-PythonMind project
+A program to play popular board game MasterMind made in python
 
-Als onderdeel van de REA college programmeer opleiding ben ik een project begonnen.
+## Getting Started
 
-Het doel van het project is om het bordspel MasterMind digitaal na te maken.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Libraries
+
+The libraries used:
+
+* Pygame
+
+# Libraries
+PyGame
+
+# How it looks
+<!-- add screenshots here -->
+
+The first screen
