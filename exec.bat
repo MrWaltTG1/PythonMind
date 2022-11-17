@@ -1,1 +1,1 @@
-python -m bin/main.py
+python bin/main.py
