@@ -28,128 +28,135 @@ def update_screen(settings, screen, menu_dict, game_screen):
         for pin in game_screen.guess_box.guess_pin_list:
             pin.blitme()
         game_screen.guess_box.color_pins_area.blitme()
-        
+
         try:
             if game_screen.confirm == True:
                 screen.blit(game_screen.dark_surf, settings.rect)
                 game_screen.confirm_button.blitme()
                 game_screen.cancel_button.blitme()
-                pygame.draw.rect(screen,settings.hud_colors["white"],game_screen.textbox)
-                screen.blit(game_screen.image,game_screen.image_rect)
+                pygame.draw.rect(
+                    screen, settings.hud_colors["white"], game_screen.textbox)
+                screen.blit(game_screen.image, game_screen.image_rect)
 
         except:
             pass
 
-        #Draw win condition
+        # Draw win condition
         try:
             game_screen.winscreen.blitme()
         except:
-            #Draw lose condition
+            # Draw lose condition
             try:
                 game_screen.losescreen.blitme()
             except:
                 pass
-            
 
-    #display the last drawn screen
+    # display the last drawn screen
     pygame.display.flip()
+
 
 def check_events(settings, screen, menu_dict, game_screen):
     for event in pygame.event.get():
-        #If event is quit then quit
+        # If event is quit then quit
         if event.type == pygame.QUIT:
             sys.exit()
-        #Here go all the other event checks
-        #FOR CLICKING THE MOUSE (ONE TIME EVENT)
+        # Here go all the other event checks
+        # FOR CLICKING THE MOUSE (ONE TIME EVENT)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            check_mouse_down_events(event, settings,screen, menu_dict, game_screen)
+            check_mouse_down_events(
+                event, settings, screen, menu_dict, game_screen)
         elif event.type == pygame.MOUSEBUTTONUP:
-            check_mouse_up_events(event, settings,screen, menu_dict, game_screen)
-    
-    #FOR HOLDING DOWN THE MOUSE
+            check_mouse_up_events(event, settings, screen,
+                                  menu_dict, game_screen)
+
+    # FOR HOLDING DOWN THE MOUSE
     if pygame.mouse.get_pressed()[0]:
-        check_mouse_hold_events(settings,screen,menu_dict, game_screen, hold=True)
+        check_mouse_hold_events(
+            settings, screen, menu_dict, game_screen, hold=True)
 
 
-
-def check_mouse_down_events(event, settings,screen, menu_dict, game_screen):
+def check_mouse_down_events(event, settings, screen, menu_dict, game_screen):
     """Method for watching mouse clicks"""
-    #Function for mouse clicks
-    #Get the x and y location of where has been clicked
+    # Function for mouse clicks
+    # Get the x and y location of where has been clicked
     x, y = event.pos
 
-    if event.button == 1: #LEFT CLICK
-        #MENU INTERACTIONS
+    if event.button == 1:  # LEFT CLICK
+        # MENU INTERACTIONS
         if menu_dict["main_menu"].active:
             for button in menu_dict["main_menu"].button_list:
-                if button.rect.collidepoint(x,y):
+                if button.rect.collidepoint(x, y):
                     menu_dict["main_menu"].click(button)
                     break
         elif menu_dict["option_menu"].active:
             for button in menu_dict["option_menu"].button_list:
-                if button.rect.collidepoint(x,y):
+                if button.rect.collidepoint(x, y):
                     menu_dict["option_menu"].click(button)
                     break
             for slider in menu_dict["option_menu"].slider_list:
-                if slider.box_rect.collidepoint(x,y):
+                if slider.box_rect.collidepoint(x, y):
                     slider.circle_pos[0] = x
         elif menu_dict["start_menu"].active:
             for button in menu_dict["start_menu"].button_list:
-                if button.rect.collidepoint(x,y):
+                if button.rect.collidepoint(x, y):
                     menu_dict["start_menu"].click(button)
                     break
             for slider in menu_dict["start_menu"].slider_list:
-                if slider.box_rect.collidepoint(x,y):
+                if slider.box_rect.collidepoint(x, y):
                     slider.circle_pos[0] = x
 
-        #END OF MENU INTERACTIONS
+        # END OF MENU INTERACTIONS
         # ----------------------
-        #GAME SCREEN INTERACTIONS
+        # GAME SCREEN INTERACTIONS
 
         elif game_screen.active:
-            #Create a new colored pin when left MOUSEBUTTONDOWN, and subsequently remove it when left MOUSEBUTTONUP
-            if game_screen.guess_box.rect.collidepoint(x,y):
+            # Create a new colored pin when left MOUSEBUTTONDOWN, and subsequently remove it when left MOUSEBUTTONUP
+            if game_screen.guess_box.rect.collidepoint(x, y):
                 for pin in game_screen.guess_box.color_pins_area.pin_list:
-                    if pin.rect.collidepoint(x,y):
-                        new_pin = create_draggable_pin(settings,screen,pos=(x,y),color = pin.color)
-                        game_screen.guess_box.color_pins_area.pin_list.append(new_pin)
+                    if pin.rect.collidepoint(x, y):
+                        new_pin = create_draggable_pin(
+                            settings, screen, pos=(x, y), color=pin.color)
+                        game_screen.guess_box.color_pins_area.pin_list.append(
+                            new_pin)
                         break
-                if game_screen.guess_box.confirm_box.rect.collidepoint(x,y):
-                    game_screen.guess_box.confirm_selection(game_screen.guess_box.confirm_box)
-            elif game_screen.game_board.rect.collidepoint(x,y):
+                if game_screen.guess_box.confirm_box.rect.collidepoint(x, y):
+                    game_screen.guess_box.confirm_selection(
+                        game_screen.guess_box.confirm_box)
+            elif game_screen.game_board.rect.collidepoint(x, y):
                 for button in game_screen.game_board.button_list:
-                    if button.rect.collidepoint(x,y):
+                    if button.rect.collidepoint(x, y):
                         game_screen.game_board.click(button)
 
+            game_screen.click((x, y))
 
-            game_screen.click((x,y))
+
+def check_mouse_up_events(event, settings, screen, menu_dict, game_screen):
+    x, y = event.pos
+    if event.button == 1:  # LEFT CLICK
+        # Disables the hold feature of holding down the mouse button
+        check_mouse_hold_events(
+            settings, screen, menu_dict, game_screen, hold=False)
 
 
-def check_mouse_up_events(event, settings,screen, menu_dict, game_screen):
-    x,y = event.pos
-    if event.button == 1: #LEFT CLICK
-        #Disables the hold feature of holding down the mouse button
-        check_mouse_hold_events(settings,screen,menu_dict, game_screen, hold=False)
-
-def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
-    #Function for holding down the mouse button
-    x,y = pygame.mouse.get_pos()
+def check_mouse_hold_events(settings, screen, menu_dict, game_screen, hold):
+    # Function for holding down the mouse button
+    x, y = pygame.mouse.get_pos()
     if hold:
-        #if event.button == 1: #LEFT CLICK
+        # if event.button == 1: #LEFT CLICK
         if menu_dict["option_menu"].active:
             for slider in menu_dict["option_menu"].slider_list:
-                if slider.box_rect.collidepoint(x,y):
+                if slider.box_rect.collidepoint(x, y):
                     slider.circle_pos[0] = x
         elif menu_dict["start_menu"].active:
             for slider in menu_dict["start_menu"].slider_list:
-                if slider.box_rect.collidepoint(x,y):
+                if slider.box_rect.collidepoint(x, y):
                     slider.circle_pos[0] = x
         if game_screen.active:
-            #Go past the first 6 pins that should remain static
+            # Go past the first 6 pins that should remain static
             for pin in game_screen.guess_box.color_pins_area.pin_list[6:]:
-                if game_screen.guess_box.rect.collidepoint(x,y):
-                    pin.rect_big.center, pin.rect.center = (x,y),(x,y)
-                    #Print color
+                if game_screen.guess_box.rect.collidepoint(x, y):
+                    pin.rect_big.center, pin.rect.center = (x, y), (x, y)
+                    # Print color
                     #print([k for k, v in settings.colors.items() if v == pin.color][0])
     else:
         if len(game_screen.guess_box.color_pins_area.pin_list) > 6:
@@ -168,27 +175,32 @@ def check_mouse_hold_events(settings,screen,menu_dict,game_screen, hold):
 
             game_screen.guess_box.color_pins_area.pin_list.pop()
 
-def create_draggable_pin(settings,screen,pos,color):
-    return Pin(settings,screen,pos,color,settings.medium_pin_radius)
+
+def create_draggable_pin(settings, screen, pos, color):
+    return Pin(settings, screen, pos, color, settings.medium_pin_radius)
+
 
 def convert_ticks_to_time(ticks):
-    time_list= []
-    
+    time_list = []
+
     counting_minutes = str(int(ticks/60000)).zfill(2)
-    counting_seconds = str(int((ticks%60000)/1000)).zfill(2)
+    counting_seconds = str(int((ticks % 60000)/1000)).zfill(2)
 
     time_list.append(counting_minutes)
     time_list.append(counting_seconds)
     return time_list
 
+
 def get_surf_darken_screen(screen, settings):
-    darken_surf = pygame.Surface((settings.screen_width, settings.screen_height), pygame.SRCALPHA)
+    darken_surf = pygame.Surface(
+        (settings.screen_width, settings.screen_height), pygame.SRCALPHA)
     darken_surf.set_alpha(180)
-    pygame.draw.rect(darken_surf,(0,0,0),settings.rect)
+    pygame.draw.rect(darken_surf, (0, 0, 0), settings.rect)
     return darken_surf
 
-def create_text_box(settings,pos,size,text,text_color = None, font_size = None):
-    textbox = pygame.Rect(pos,size)
+
+def create_text_box(settings, pos, size, text, text_color=None, font_size=None):
+    textbox = pygame.Rect(pos, size)
     textbox.center = pos
     if not text_color:
         text_color = settings.hud_colors["black"]
@@ -198,5 +210,5 @@ def create_text_box(settings,pos,size,text,text_color = None, font_size = None):
     msg_image = font.render(text, True, text_color)
     msg_image_rect = msg_image.get_rect()
     msg_image_rect.center = textbox.center
-    
-    return (textbox,(msg_image,msg_image_rect))
+
+    return (textbox, (msg_image, msg_image_rect))

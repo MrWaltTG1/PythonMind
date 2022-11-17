@@ -4,75 +4,77 @@ from elements import Pin
 from secret_code import SecretCode
 import game_functions as gf
 
+
 class Gameboard():
-    def __init__(self, settings,screen) -> None:
+    def __init__(self, settings, screen) -> None:
         self.screen, self.settings = screen, settings
-        
-        self.pos = (settings.screen_width / 2, settings.screen_height / 2) #Top left position
-        self.width, self.height = settings.screen_width * 0.635, settings.screen_height * 0.85
+
+        self.pos = (settings.screen_width / 2,
+                    settings.screen_height / 2)  # Top left position
+        self.width, self.height = settings.screen_width * \
+            0.635, settings.screen_height * 0.85
         self.color = self.settings.hud_colors['white']
-        
-        self.rect = pygame.Rect(self.pos, (self.width,self.height))
+
+        self.rect = pygame.Rect(self.pos, (self.width, self.height))
         self.rect.center = self.pos
         self.rect.top += 60
         self.rect.left = 40
-        self.new_guess, self.won, self.loss = False,False,False
-        self.guess_list,self.empty_guess_list, self.total_guesses, self.secret_code = [],[],[],[]
+        self.new_guess, self.won, self.loss = False, False, False
+        self.guess_list, self.empty_guess_list, self.total_guesses, self.secret_code = [], [], [], []
         self.index = 0
-        self.starting_index, self.ending_index = 0,6
+        self.starting_index, self.ending_index = 0, 6
         self.fill_empty_guesses()
         self.create_buttons()
         self.create_side_bar()
         self.create_textboxes()
 
-
     def update(self):
         if self.new_guess:
-            
+
             self.create_guess()
             self.new_guess = False
-            #Update the side bar if theres more than 6 guesses
+            # Update the side bar if theres more than 6 guesses
             if len(self.total_guesses) > 6:
                 self.update_side_bar()
                 self.click(self.button_list[1])
-        
-        #Update the text telling how much guesses you have left
+
+        # Update the text telling how much guesses you have left
         self.textbox_list_list.remove(self.text_max_guesses)
-        pos, size, text = (self.rect.right + 200, 270),(200,80), f"you have {self.settings.max_guesses - len(self.total_guesses)} guesses left"
-        self.text_max_guesses = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        pos, size, text = (self.rect.right + 200, 270), (200,
+                                                         80), f"you have {self.settings.max_guesses - len(self.total_guesses)} guesses left"
+        self.text_max_guesses = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
         self.textbox_list_list.append(self.text_max_guesses)
-        
-        
+
         self.code.update(self.won)
 
-        #UPDATE the new guess positions
+        # UPDATE the new guess positions
         for guess in self.total_guesses:
             if guess.won == True:
                 self.won = True
-        
 
     def create_buttons(self):
         self.button_list = []
-        #Create button to move up
-        msg = '^' 
-        size = 30,70
+        # Create button to move up
+        msg = '^'
+        size = 30, 70
         pos = self.rect.right - 5, self.rect.top + 5
-        up_button = Button(self.screen,self.settings,msg,pos,'gb_2')
+        up_button = Button(self.screen, self.settings, msg, pos, 'gb_2')
         up_button.rect.size = size
         up_button.rect.topright = pos
         up_button.msg_image_rect.center = up_button.rect.center
-        
-        #Create button to move down
+
+        # Create button to move down
         msg = 'v'
         pos = self.rect.right - 5, self.rect.bottom - self.settings.guess_box_height + 8
-        down_button = Button(self.screen,self.settings,msg,pos,'gb_2')
+        down_button = Button(self.screen, self.settings, msg, pos, 'gb_2')
         down_button.rect.size = size
         down_button.rect.bottomright = pos
         down_button.msg_image_rect.center = down_button.rect.center
-        
-        self.button_list  = [up_button,down_button]
-    
-    def click(self,button):
+
+        self.button_list = [up_button, down_button]
+
+    def click(self, button):
         if button.msg == "^":
             if self.starting_index > 0:
                 self.starting_index -= 1
@@ -91,33 +93,34 @@ class Gameboard():
                     self.side_bar_slide_rect.bottom = self.side_bar_rect.bottom
         else:
             print('could not find the right button')
-        
+
     def create_side_bar(self):
         pos = self.button_list[0].rect.bottomright
-        size = 30,self.button_list[1].rect.top - self.button_list[0].rect.bottom
-        self.side_bar_rect = pygame.Rect(pos,size)
+        size = 30, self.button_list[1].rect.top - \
+            self.button_list[0].rect.bottom
+        self.side_bar_rect = pygame.Rect(pos, size)
         self.side_bar_rect.topright = pos
-        self.side_bar_slide_rect = pygame.Rect(self.side_bar_rect.topleft,self.side_bar_rect.size)
-        
+        self.side_bar_slide_rect = pygame.Rect(
+            self.side_bar_rect.topleft, self.side_bar_rect.size)
+
     def update_side_bar(self):
-        #Resize the light grey bar if a new guess is added
+        # Resize the light grey bar if a new guess is added
         if len(self.total_guesses) > 6:
             x = len(self.total_guesses) - 5
-            self.side_bar_slide_rect.height = int(self.side_bar_rect.height / x)
-    
-
+            self.side_bar_slide_rect.height = int(
+                self.side_bar_rect.height / x)
 
     def fill_empty_guesses(self):
-        #Create the visuals on the board that the guesses get added into
+        # Create the visuals on the board that the guesses get added into
         pos = self.rect.midtop[0], self.rect.midtop[1] + 10
         colors = []
-        i=4
+        i = 4
         while i > 0:
             colors.append(self.settings.guess_pin_color_inactive)
-            i-=1
+            i -= 1
         i = 6
         while i > 0:
-            add_guess = Guess(self.settings,self.screen,pos,colors,0)
+            add_guess = Guess(self.settings, self.screen, pos, colors, 0)
             add_guess.create_pins()
             add_guess.create_results()
             self.empty_guess_list.append(add_guess)
@@ -132,9 +135,10 @@ class Gameboard():
                 except:
                     pos = self.rect.midtop[0], self.rect.midtop[1] + 10
                     print("whoops")
-                
+
                 self.guess_list[self.index]["pos"] = pos
-                add_guess = Guess(self.settings,self.screen,self.guess_list[self.index]["pos"],self.guess_list[self.index]["colors"],len(self.guess_list))
+                add_guess = Guess(
+                    self.settings, self.screen, self.guess_list[self.index]["pos"], self.guess_list[self.index]["colors"], len(self.guess_list))
                 add_guess.create_pins()
                 add_guess.get_results(self.secret_code)
                 add_guess.create_results()
@@ -142,69 +146,84 @@ class Gameboard():
                 self.index += 1
 
     def create_secret_code(self):
-        self.code = SecretCode(self.settings,self.screen)
+        self.code = SecretCode(self.settings, self.screen)
 
     def create_textboxes(self):
-        self.textbox_list_list= []
+        self.textbox_list_list = []
         left = self.rect.right
-        #Results legend
-        pos, size, text = (left + 200, 150),(200,80), "Red means the right color is in the right place"
-        textbox_list1 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
-        pos, size, text = (left + 200, 180),(200,80), "White is the right color is in the wrong place"
-        textbox_list2 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
-        pos, size, text = (left + 200, 210),(200,80), "Empty means the color is wrong"
-        textbox_list3 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
+        # Results legend
+        pos, size, text = (left + 200, 150), (200,
+                                              80), "Red means the right color is in the right place"
+        textbox_list1 = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
+        pos, size, text = (left + 200, 180), (200,
+                                              80), "White is the right color is in the wrong place"
+        textbox_list2 = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
+        pos, size, text = (left + 200, 210), (200,
+                                              80), "Empty means the color is wrong"
+        textbox_list3 = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
         self.textbox_list_list.append(textbox_list1)
         self.textbox_list_list.append(textbox_list2)
         self.textbox_list_list.append(textbox_list3)
-        
-        #Show amount of guesses left
-        pos, size, text = (left + 200, 370),(200,80), f"you have {self.settings.max_guesses - len(self.total_guesses)} guesses left"
-        self.text_max_guesses = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
-        self.textbox_list_list.append(self.text_max_guesses)
-        
-        
-        
-        #Actions text help
-        pos, size, text = (left + 200, 770),(200,80), "Drag the colored pins to the empty slots"
-        textbox_list1 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
-        pos, size, text = (left + 200, 800),(200,80), "You can also click the pins the fill the leftmost"
-        textbox_list2 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
-        pos, size, text = (left + 200, 830),(200,80), "empty slot"
-        textbox_list3 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
-        pos, size, text = (left + 200, 870),(200,80), "Once all slots are filled just press confirm!"
-        textbox_list4 = gf.create_text_box(self.settings,pos,size,text,text_color=self.settings.hud_colors["white"], font_size= 25)
 
-        
+        # Show amount of guesses left
+        pos, size, text = (
+            left + 200, 370), (200, 80), f"you have {self.settings.max_guesses - len(self.total_guesses)} guesses left"
+        self.text_max_guesses = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
+        self.textbox_list_list.append(self.text_max_guesses)
+
+        # Actions text help
+        pos, size, text = (left + 200, 770), (200,
+                                              80), "Drag the colored pins to the empty slots"
+        textbox_list1 = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
+        pos, size, text = (
+            left + 200, 800), (200, 80), "You can also click the pins the fill the leftmost"
+        textbox_list2 = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
+        pos, size, text = (left + 200, 830), (200, 80), "empty slot"
+        textbox_list3 = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
+        pos, size, text = (left + 200, 870), (200,
+                                              80), "Once all slots are filled just press confirm!"
+        textbox_list4 = gf.create_text_box(
+            self.settings, pos, size, text, text_color=self.settings.hud_colors["white"], font_size=25)
+
         self.textbox_list_list.append(textbox_list1)
         self.textbox_list_list.append(textbox_list2)
         self.textbox_list_list.append(textbox_list3)
         self.textbox_list_list.append(textbox_list4)
 
     def blitme(self):
-        pygame.draw.rect(self.screen,self.settings.hud_colors["black"], self.rect)
-        pygame.draw.rect(self.screen,self.color,self.rect, 5)
-        pygame.draw.rect(self.screen,self.settings.hud_colors['dark_grey'],self.side_bar_rect)
+        pygame.draw.rect(
+            self.screen, self.settings.hud_colors["black"], self.rect)
+        pygame.draw.rect(self.screen, self.color, self.rect, 5)
+        pygame.draw.rect(
+            self.screen, self.settings.hud_colors['dark_grey'], self.side_bar_rect)
         if len(self.total_guesses) > 6:
-            pygame.draw.rect(self.screen,self.settings.hud_colors['grey'],self.side_bar_slide_rect)
+            pygame.draw.rect(
+                self.screen, self.settings.hud_colors['grey'], self.side_bar_slide_rect)
         self.code.blitme()
         for text in self.textbox_list_list:
-            self.screen.blit(text[1][0],text[1][1])
+            self.screen.blit(text[1][0], text[1][1])
 
 
 class Guess():
-    def __init__(self, settings,screen, pos, colors, number) -> None:
+    def __init__(self, settings, screen, pos, colors, number) -> None:
         self.screen, self.settings, self.colors, self.pos, self.number = screen, settings, colors, pos, number
         self.won = False
         self.width, self.height = (settings.screen_width * 0.635) - 10, 100
-        
-        self.bbox = pygame.Rect(pos,(self.width,self.height))
+
+        self.bbox = pygame.Rect(pos, (self.width, self.height))
         self.bbox.midtop = pos
         self.color = self.settings.hud_colors['black']
         self.original_surf = self.settings.shine_image
         self.create_indent_box()
-    
-    def update(self, reverse = False):
+
+    def update(self, reverse=False):
         if not reverse:
             self.bbox.top += self.bbox.height + 8
             self.indent_rect.top += self.bbox.height + 8
@@ -214,60 +233,71 @@ class Guess():
         self.create_indent_box()
         self.create_pins()
         self.create_results()
-    
+
     def create_indent_box(self):
         pos = self.bbox.center
         size = self.width * 0.9, self.height * 0.9
-        self.indent_rect = pygame.Rect(pos,size)
+        self.indent_rect = pygame.Rect(pos, size)
         self.indent_rect.center = pos
-        
-        
-        self.coord1 = (self.indent_rect.right - self.indent_rect.width / 4.5), self.indent_rect.top +1
-        self.coord2 = (self.indent_rect.right - (self.indent_rect.width / 4.5 *2)), self.indent_rect.top +1
-        self.coord3 = (self.indent_rect.right - (self.indent_rect.width / 4.5 *1.5)), self.indent_rect.top + self.height * 0.3
-        self.indent_indent_coords_top = self.coord1, self.coord2, self.coord3
-        self.indent_indent_coords_top2 = (self.coord1[0], self.coord1[1] - 1), (self.coord2[0], self.coord2[1] - 1), (self.coord3[0],self.coord3[1] - 5)
-        
-        self.coord4 = (self.indent_rect.right - self.indent_rect.width / 4.5), self.indent_rect.bottom -3
-        self.coord5 = (self.indent_rect.right - (self.indent_rect.width / 4.5 *2)), self.indent_rect.bottom -3
-        self.coord6 = (self.indent_rect.right - (self.indent_rect.width / 4.5 *1.5)), self.indent_rect.bottom - self.height * 0.3
-        self.indent_indent_coords_bottom = self.coord4, self.coord5, self.coord6
-        self.indent_indent_coords_bottom2 = (self.coord4[0], self.coord4[1] +3), (self.coord5[0], self.coord5[1] +3), (self.coord6[0],self.coord6[1] + 5)
 
-        self.font = pygame.font.SysFont(self.settings.font_type, self.settings.font_size)
-        self.msg_image = self.font.render(str(self.number),True,self.settings.hud_colors["red"])
+        self.coord1 = (self.indent_rect.right -
+                       self.indent_rect.width / 4.5), self.indent_rect.top + 1
+        self.coord2 = (self.indent_rect.right -
+                       (self.indent_rect.width / 4.5 * 2)), self.indent_rect.top + 1
+        self.coord3 = (self.indent_rect.right - (self.indent_rect.width /
+                       4.5 * 1.5)), self.indent_rect.top + self.height * 0.3
+        self.indent_indent_coords_top = self.coord1, self.coord2, self.coord3
+        self.indent_indent_coords_top2 = (self.coord1[0], self.coord1[1] - 1), (
+            self.coord2[0], self.coord2[1] - 1), (self.coord3[0], self.coord3[1] - 5)
+
+        self.coord4 = (self.indent_rect.right -
+                       self.indent_rect.width / 4.5), self.indent_rect.bottom - 3
+        self.coord5 = (self.indent_rect.right -
+                       (self.indent_rect.width / 4.5 * 2)), self.indent_rect.bottom - 3
+        self.coord6 = (self.indent_rect.right - (self.indent_rect.width /
+                       4.5 * 1.5)), self.indent_rect.bottom - self.height * 0.3
+        self.indent_indent_coords_bottom = self.coord4, self.coord5, self.coord6
+        self.indent_indent_coords_bottom2 = (self.coord4[0], self.coord4[1] + 3), (
+            self.coord5[0], self.coord5[1] + 3), (self.coord6[0], self.coord6[1] + 5)
+
+        self.font = pygame.font.SysFont(
+            self.settings.font_type, self.settings.font_size)
+        self.msg_image = self.font.render(
+            str(self.number), True, self.settings.hud_colors["red"])
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.indent_rect.left - 20, self.bbox.centery
-        
+
     def create_pins(self):
         self.pin_list = []
-        pos = (self.bbox.midleft[0]  + self.settings.big_pin_radius + 30, self.bbox.midleft[1])
+        pos = (
+            self.bbox.midleft[0] + self.settings.big_pin_radius + 30, self.bbox.midleft[1])
         for color in self.colors:
-            new_pin = Pin(self.settings,self.screen,pos,color,self.settings.big_pin_radius)
+            new_pin = Pin(self.settings, self.screen, pos,
+                          color, self.settings.big_pin_radius)
             self.pin_list.append(new_pin)
-            pos = (pos[0] + self.settings.big_pin_radius + 35, self.bbox.midleft[1])
-    
-    
+            pos = (pos[0] + self.settings.big_pin_radius +
+                   35, self.bbox.midleft[1])
+
     def get_results(self, secret_code):
         for code in secret_code:
             print(code.color)
-        
+
         self.result_list, code_color_list, guess_color_list = [], [], []
         for code in secret_code:
             code_color_list.append(code.color)
         for color in self.colors:
             guess_color_list.append(color)
-        
+
         i = 3
-        #GET FULL ONES
+        # GET FULL ONES
         while i > -1:
             if code_color_list[i] == guess_color_list[i]:
                 self.result_list.append("full")
                 code_color_list.pop(i)
                 guess_color_list.pop(i)
-            i-=1
+            i -= 1
 
-        #GET HALF ONES
+        # GET HALF ONES
         for code in code_color_list[:]:
             for guess in guess_color_list[:]:
                 if code == guess:
@@ -275,15 +305,15 @@ class Guess():
                     code_color_list.remove(code)
                     guess_color_list.remove(guess)
                     break
-        
-        #Fill the rest with empty spaces
+
+        # Fill the rest with empty spaces
         while len(self.result_list) < 4:
             self.result_list.append("none")
         if self.settings.difficulty == 1:
             self.result_list.sort()
 
-        #Checks to see if the game has been won by guessing the correct code
-        if self.result_list == ["full","full","full","full"]:
+        # Checks to see if the game has been won by guessing the correct code
+        if self.result_list == ["full", "full", "full", "full"]:
             self.won = True
 
     def create_results(self):
@@ -292,54 +322,65 @@ class Guess():
         self.result_rect = pygame.rect.Rect(pos, size)  # type: ignore
         self.result_rect.midleft = pos  # type: ignore
 
-
         pos = [self.bbox.right - 190, self.bbox.centery - 7.5]
         self.result_pin_list = []
         try:
             for result in self.result_list:
                 if result == "full":
-                    new_result_pin = Pin(self.settings,self.screen,pos,self.settings.hud_colors['red'],self.settings.small_pin_radius)
+                    new_result_pin = Pin(
+                        self.settings, self.screen, pos, self.settings.hud_colors['red'], self.settings.small_pin_radius)
                     self.result_pin_list.append(new_result_pin)
 
                 elif result == "half":
-                    new_result_pin = Pin(self.settings,self.screen,pos,self.settings.hud_colors['white'],self.settings.small_pin_radius)
+                    new_result_pin = Pin(
+                        self.settings, self.screen, pos, self.settings.hud_colors['white'], self.settings.small_pin_radius)
                     self.result_pin_list.append(new_result_pin)
 
                 elif result == "none":
-                    new_result_pin = Pin(self.settings,self.screen,pos,self.settings.guess_pin_color_inactive,self.settings.small_pin_radius)
+                    new_result_pin = Pin(
+                        self.settings, self.screen, pos, self.settings.guess_pin_color_inactive, self.settings.small_pin_radius)
                     self.result_pin_list.append(new_result_pin)
 
                 pos[0] += 28
         except:
-            i=4
+            i = 4
             while i > 0:
-                new_result_pin = Pin(self.settings,self.screen,pos,self.settings.guess_pin_color_inactive,self.settings.small_pin_radius)
+                new_result_pin = Pin(self.settings, self.screen, pos,
+                                     self.settings.guess_pin_color_inactive, self.settings.small_pin_radius)
                 self.result_pin_list.append(new_result_pin)
                 pos[0] += 28
-                i-=1
-        self.result_pin_list[1].rect.centery, self.result_pin_list[3].rect.centery = pos[1] +15, pos[1]+15
-        self.result_pin_list[1].rect_big.centery, self.result_pin_list[3].rect_big.centery = pos[1] +15, pos[1]+15
+                i -= 1
+        self.result_pin_list[1].rect.centery, self.result_pin_list[3].rect.centery = pos[1] + 15, pos[1]+15
+        self.result_pin_list[1].rect_big.centery, self.result_pin_list[3].rect_big.centery = pos[1] + 15, pos[1]+15
 
     def draw_indent_box(self):
-        pygame.draw.rect(self.screen,self.settings.hud_colors["light_black"],self.indent_rect, border_radius=10)
-        pygame.draw.rect(self.screen,self.settings.hud_colors["dark_grey"],self.indent_rect,width=4, border_radius=10)
-        
-        #Top indent indent
-        pygame.draw.polygon(self.screen,self.settings.hud_colors["black"],self.indent_indent_coords_top)
-        pygame.draw.polygon(self.screen,self.settings.hud_colors["dark_grey"],self.indent_indent_coords_top,width=4)
-        pygame.draw.polygon(self.screen,self.settings.hud_colors["black"],self.indent_indent_coords_top2)
-        #Bottom indent indent
-        pygame.draw.polygon(self.screen,self.settings.hud_colors["black"],self.indent_indent_coords_bottom)
-        pygame.draw.polygon(self.screen,self.settings.hud_colors["dark_grey"],self.indent_indent_coords_bottom,width=4)
-        pygame.draw.polygon(self.screen,self.settings.hud_colors["black"],self.indent_indent_coords_bottom2)
+        pygame.draw.rect(
+            self.screen, self.settings.hud_colors["light_black"], self.indent_rect, border_radius=10)
+        pygame.draw.rect(
+            self.screen, self.settings.hud_colors["dark_grey"], self.indent_rect, width=4, border_radius=10)
+
+        # Top indent indent
+        pygame.draw.polygon(
+            self.screen, self.settings.hud_colors["black"], self.indent_indent_coords_top)
+        pygame.draw.polygon(
+            self.screen, self.settings.hud_colors["dark_grey"], self.indent_indent_coords_top, width=4)
+        pygame.draw.polygon(
+            self.screen, self.settings.hud_colors["black"], self.indent_indent_coords_top2)
+        # Bottom indent indent
+        pygame.draw.polygon(
+            self.screen, self.settings.hud_colors["black"], self.indent_indent_coords_bottom)
+        pygame.draw.polygon(
+            self.screen, self.settings.hud_colors["dark_grey"], self.indent_indent_coords_bottom, width=4)
+        pygame.draw.polygon(
+            self.screen, self.settings.hud_colors["black"], self.indent_indent_coords_bottom2)
 
         if self.number != 0:
-            self.screen.blit(self.msg_image,self.msg_image_rect)
-        
+            self.screen.blit(self.msg_image, self.msg_image_rect)
+
     def blitme(self):
         self.draw_indent_box()
         for pin in self.pin_list:
             pin.blitme()
-        #pygame.draw.rect(self.screen,self.settings.hud_colors['dark_grey'],self.result_rect)
+        # pygame.draw.rect(self.screen,self.settings.hud_colors['dark_grey'],self.result_rect)
         for result in self.result_pin_list:
             result.blitme()
