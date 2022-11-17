@@ -227,7 +227,7 @@ class Start_menu():
         pos = (50, 50)
         size = (700, 900)
         self.text_box = pygame.rect.Rect(pos, size)
-        with open('tutorial.txt', 'r') as f:
+        with open('bin/tutorial.txt', 'r') as f:
             msg_list = f.readlines()
 
         self.font = pygame.font.SysFont(
@@ -282,7 +282,7 @@ class Start_menu():
 
             slider.percentage = percentage
             slider.calculations(int(percentage))
-            if slider.is_int == True:
+            if slider.is_int is True:
                 self.settings.max_guesses = int(slider.msg)
 
     def blitme(self):
